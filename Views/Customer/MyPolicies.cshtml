@@ -1,0 +1,43 @@
+﻿@using EInsurance_App.ViewModels.Policy
+@model CustomerPolicyVM
+
+<div class="container mt-4">
+    <h2>@Model.CustomerName - My Policies</h2>
+
+    @if (!Model.Policies.Any())
+    {
+        <p>No policies found</p>
+    }
+
+    @foreach (var policy in Model.Policies)
+    {
+        <div class="card mt-3">
+            <div class="card-body">
+
+                <h5>Policy ID: @policy.PolicyID</h5>
+                <p><strong>Scheme:</strong> @policy.SchemeName</p>
+                <p><strong>Premium:</strong> ₹@policy.Premium</p>
+                <p><strong>Issued:</strong> @policy.DateIssued.ToShortDateString()</p>
+
+                <h6>Payments:</h6>
+
+                @if (policy.Payments.Any())
+                {
+                    <ul>
+                        @foreach (var pay in policy.Payments)
+                        {
+                            <li>
+                                ₹@pay.Amount - @pay.PaymentDate.ToShortDateString()
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No payments yet</p>
+                }
+
+            </div>
+        </div>
+    }
+</div>

@@ -133,7 +133,7 @@ namespace EInsurance_App.Controllers
             {
                 "Admin" => RedirectToAction("Dashboard", "Admin"),
                 "Agent" => RedirectToAction("Dashboard", "Agent"),
-                "Customer" => RedirectToAction("Dashboard", "Customer"),
+                "Customer" => RedirectToAction("MyPolicies", "Customer"),
                 _ => RedirectToAction("Dashboard", "Employee")
             };
         }

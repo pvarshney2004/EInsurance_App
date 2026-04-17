@@ -1,0 +1,33 @@
+﻿@using EInsurance_App.ViewModels.Policy
+@model CustomerPolicyVM
+
+<div class="container mt-4">
+
+    <h2>Search Customer Policies</h2>
+
+    <form method="get">
+        <input name="email" class="form-control" placeholder="Enter customer email" />
+        <button class="btn btn-primary mt-2">Search</button>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <p class="text-danger">@ViewBag.Error</p>
+    }
+
+    @if (Model != null)
+    {
+        <h3>@Model.CustomerName</h3>
+
+        @foreach (var policy in Model.Policies)
+        {
+            <div class="card mt-3">
+                <div class="card-body">
+                    <p><strong>Policy ID:</strong> @policy.PolicyID</p>
+                    <p><strong>Scheme:</strong> @policy.SchemeName</p>
+                    <p><strong>Premium:</strong> ₹@policy.Premium</p>
+                </div>
+            </div>
+        }
+    }
+</div>
