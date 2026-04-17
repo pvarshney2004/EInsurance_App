@@ -1,0 +1,72 @@
+﻿@model EInsurance_App.ViewModels.Auth.RegisterCustomerVM
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-lg rounded-3">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Register</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <form asp-action="Register" method="post">
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
+                        </div>
+
+                        <!-- DOB -->
+                        <div class="mb-3">
+                            <label asp-for="DateOfBirth" class="form-label"></label>
+                            <input asp-for="DateOfBirth" type="date" class="form-control" />
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label"></label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password" />
+                        </div>
+
+                        <!-- Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+
+                        <!-- Login Link -->
+                        <div class="text-center mt-3">
+                            <small>
+                                Already have an account?
+                                <a asp-action="Login">Login</a>
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
