@@ -117,3 +117,7 @@ Admins can perform CRUD (Create, Read, Update, Delete) operations on users and b
 5. Confirmation is displayed.
 
 ---
+
+## 👤 Author
+**Prashant Varshney**  
+B.Tech CSE (Data Analytics) 
