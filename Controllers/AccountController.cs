@@ -99,7 +99,7 @@ namespace EInsurance_App.Controllers
 
                     if (employee != null && employee.Password == model.Password)
                     {
-                        role = employee.Role; // e.g. "Employee"
+                        role = "Employee";
                         email = employee.Email;
                     }
                     else

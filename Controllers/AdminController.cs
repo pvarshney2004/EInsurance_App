@@ -1,4 +1,6 @@
 ﻿using EInsurance_App.Data;
+using EInsurance_App.Models;
+using EInsurance_App.ViewModels.Customer;
 using EInsurance_App.ViewModels.Policy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -59,6 +61,283 @@ namespace EInsurance_App.Controllers
                 Policies = policies
             };
             return View(vm);
+        }
+
+
+        public IActionResult Customers()
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var customers = _context.Customers
+                .Select(c => new CustomerListVM
+                {
+                    CustomerID = c.CustomerID,
+                    FullName = c.FullName,
+                    Email = c.Email,
+                    Phone = c.Phone
+                }).ToList();
+
+            return View(customers);
+        }
+
+        // for customer update
+        public IActionResult EditCustomer(int id)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var customer = _context.Customers.Find(id);
+
+            if (customer == null)
+                return NotFound();
+
+            return View(customer);
+        }
+
+        [HttpPost]
+        public IActionResult EditCustomer(Customer model)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            ModelState.Remove("Password");
+            ModelState.Remove("Agent");
+            ModelState.Remove("Policies");
+            ModelState.Remove("Payments");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var customer = _context.Customers.Find(model.CustomerID);
+
+            if (customer == null)
+                return NotFound();
+
+            // Update allowed fields only
+            customer.FullName = model.FullName;
+            customer.Phone = model.Phone;
+            customer.DateOfBirth = model.DateOfBirth;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Customers");
+        }
+
+        // for cutomer delete
+        public IActionResult DeleteCustomer(int id)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var customer = _context.Customers.Find(id);
+
+            if (customer == null)
+                return NotFound();
+
+            // Check if customer has policies
+            var hasPolicies = _context.Policies.Any(p => p.CustomerID == id);
+
+            if (hasPolicies)
+            {
+                TempData["Error"] = "Cannot delete customer with existing policies.";
+                return RedirectToAction("Customers");
+            }
+
+            _context.Customers.Remove(customer);
+            _context.SaveChanges();
+
+            TempData["Success"] = "Customer deleted successfully.";
+            return RedirectToAction("Customers");
+        }
+
+
+        // for agent CRUD
+
+        public IActionResult Agents()
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var agents = _context.InsuranceAgents.ToList();
+
+            return View(agents);
+        }
+
+        public IActionResult CreateAgent()
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult CreateAgent(InsuranceAgent model)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            ModelState.Remove("Customers");
+            ModelState.Remove("Commissions");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            // Check duplicate email
+            var exists = _context.InsuranceAgents.Any(a => a.Email == model.Email);
+            if (exists)
+            {
+                ModelState.AddModelError("Email", "Email already exists");
+                return View(model);
+            }
+
+            _context.InsuranceAgents.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Agents");
+        }
+
+        public IActionResult EditAgent(int id)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var agent = _context.InsuranceAgents.Find(id);
+            if (agent == null) return NotFound();
+
+            return View(agent);
+        }
+
+        [HttpPost]
+        public IActionResult EditAgent(InsuranceAgent model)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            ModelState.Remove("Customers");
+            ModelState.Remove("Commissions");
+            ModelState.Remove("Password");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var agent = _context.InsuranceAgents.Find(model.AgentID);
+            if (agent == null) return NotFound();
+
+            agent.Username = model.Username;
+            agent.Email = model.Email;
+            agent.FullName = model.FullName;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Agents");
+        }
+
+        public IActionResult DeleteAgent(int id)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var agent = _context.InsuranceAgents.Find(id);
+            if (agent == null) return NotFound();
+
+            _context.InsuranceAgents.Remove(agent);
+            _context.SaveChanges();
+
+            return RedirectToAction("Agents");
+        }
+
+
+        // for employee CRUD
+        public IActionResult Employees()
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var employees = _context.Employees.ToList();
+
+            return View(employees);
+        }
+
+        public IActionResult CreateEmployee()
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult CreateEmployee(Employee model)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            ModelState.Remove("EmployeeSchemes");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var exists = _context.Employees.Any(e => e.Email == model.Email);
+            if (exists)
+            {
+                ModelState.AddModelError("Email", "Email already exists");
+                return View(model);
+            }
+
+            _context.Employees.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Employees");
+        }
+
+        public IActionResult EditEmployee(int id)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var emp = _context.Employees.Find(id);
+            if (emp == null) return NotFound();
+
+            return View(emp);
+        }
+
+        [HttpPost]
+        public IActionResult EditEmployee(Employee model)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            ModelState.Remove("EmployeeSchemes");
+            ModelState.Remove("Password");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var emp = _context.Employees.Find(model.EmployeeId);
+            if (emp == null) return NotFound();
+
+            emp.Username = model.Username;
+            emp.Email = model.Email;
+            emp.FullName = model.FullName;
+            emp.Role = model.Role;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Employees");
+        }
+
+        public IActionResult DeleteEmployee(int id)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var emp = _context.Employees.Find(id);
+            if (emp == null) return NotFound();
+
+            _context.Employees.Remove(emp);
+            _context.SaveChanges();
+
+            return RedirectToAction("Employees");
         }
 
 
