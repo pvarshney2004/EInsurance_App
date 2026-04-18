@@ -13,6 +13,19 @@ The system also focuses on:
 
 ---
 
+## 🛠 Tech Stack
+- **Language:** C#  
+- **Framework:** ASP.NET Core MVC  
+- **Frontend:** Razor Views (HTML, CSS, Bootstrap)  
+- **Backend:** ASP.NET Core MVC (Controllers, Models)  
+- **Database:** SQL Server  
+- **ORM:** Entity Framework Core  
+- **Authentication:** JWT (JSON Web Token)  
+- **Tools:** Visual Studio  
+- **Version Control:** Git & GitHub  
+
+---
+
 ## 🎯 Key Features
 - 🔐 JWT-based Authentication & Authorization  
 - 📄 Policy Management (View & Track)  
