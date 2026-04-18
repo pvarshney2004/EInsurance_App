@@ -118,6 +118,31 @@ Admins can perform CRUD (Create, Read, Update, Delete) operations on users and b
 
 ---
 
+## 🛒 4. Policy Purchase
+
+### **Actors**
+- Customer
+
+### **Description**
+Customers can browse available insurance policies and purchase one or multiple policies by providing the required details.
+
+### **Preconditions**
+- Customer must be authenticated.
+
+### **Postconditions**
+- Selected policy is successfully added to the customer’s account.
+
+### **Steps**
+1. Customer logs in.
+2. Navigates to the **Available Policies** section.
+3. Selects a policy.
+4. Enters required details (e.g., personal info, policy preferences).
+5. System processes the purchase.
+6. Policy is added to the customer’s account.
+7. Confirmation message is displayed.
+
+---
+
 ## 👤 Author
 **Prashant Varshney**  
 B.Tech CSE (Data Analytics) 
