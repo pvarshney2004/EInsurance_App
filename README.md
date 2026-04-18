@@ -30,7 +30,7 @@ The system also focuses on:
 - 🔐 JWT-based Authentication & Authorization  
 - 📄 Policy Management (View & Track)  
 - 👤 Role-Based Access Control  
-- ⚙️ Admin Dashboard for User & Bank Management  
+- ⚙️ Admin Dashboard for User Management  
 - 💳 Payment & Policy Tracking  
 
 ---
