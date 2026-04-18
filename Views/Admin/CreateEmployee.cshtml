@@ -1,0 +1,44 @@
+﻿@model EInsurance_App.Models.Employee
+
+<div class="container mt-4">
+
+    <h2>Create Employee</h2>
+
+    <form asp-action="CreateEmployee" method="post">
+
+        <div class="mb-3">
+            <label>Username</label>
+            <input asp-for="Username" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Password</label>
+            <input asp-for="Password" type="password" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Full Name</label>
+            <input asp-for="FullName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Role</label>
+            <select asp-for="Role" class="form-control">
+                <option value="">-- Select Role --</option>
+                <option value="Manager">Manager</option>
+                <option value="Executive">Executive</option>
+                <option value="Support">Support</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Create</button>
+        <a asp-action="Employees" class="btn btn-secondary">Cancel</a>
+
+    </form>
+
+</div>

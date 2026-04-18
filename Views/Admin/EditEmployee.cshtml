@@ -1,0 +1,40 @@
+﻿@model EInsurance_App.Models.Employee
+
+<div class="container mt-4">
+
+    <h2>Edit Employee</h2>
+
+    <form asp-action="EditEmployee" method="post">
+
+        <input type="hidden" asp-for="EmployeeId" />
+
+        <div class="mb-3">
+            <label>Username</label>
+            <input asp-for="Username" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Full Name</label>
+            <input asp-for="FullName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Role</label>
+            <select asp-for="Role" class="form-control">
+                <option value="Manager">Manager</option>
+                <option value="Executive">Executive</option>
+                <option value="Support">Support</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update</button>
+        <a asp-action="Employees" class="btn btn-secondary">Cancel</a>
+
+    </form>
+
+</div>

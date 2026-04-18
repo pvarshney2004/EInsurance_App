@@ -1,0 +1,47 @@
+﻿@model List<EInsurance_App.Models.Employee>
+
+<div class="container mt-4">
+
+    <h2>All Employees</h2>
+
+    <a asp-action="CreateEmployee" class="btn btn-primary mb-3">Add Employee</a>
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Full Name</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <td>@e.EmployeeId</td>
+                        <td>@e.Username</td>
+                        <td>@e.Email</td>
+                        <td>@e.FullName</td>
+                        <td>@e.Role</td>
+                        <td>
+                            <a asp-action="EditEmployee" asp-route-id="@e.EmployeeId" class="btn btn-warning btn-sm">Edit</a>
+                            <a asp-action="DeleteEmployee" asp-route-id="@e.EmployeeId" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Delete this employee?');">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">No employees found.</div>
+    }
+
+</div>

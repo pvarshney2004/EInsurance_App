@@ -1,11 +1,69 @@
 ﻿<div class="container mt-4">
 
-	<h2>Admin Dashboard</h2>
-    
-	<div class="mt-4">
-		<a asp-controller="Admin" asp-action="CustomerPolicies"
-			   class="btn btn-primary">
-			View Customer Policies
-		</a>
-	</div>
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+    <div class="row">
+
+        <!-- Customer Policies -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Customer Policies</h5>
+                    <p class="card-text">View policies of any customer</p>
+
+                    <a asp-controller="Admin" asp-action="CustomerPolicies"
+                           class="btn btn-primary">
+                        Go
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Customers -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Customers</h5>
+                    <p class="card-text">View, edit and delete customers</p>
+
+                    <a asp-controller="Admin" asp-action="Customers"
+                           class="btn btn-success">
+                        Go
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Agents -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Agents</h5>
+                    <p class="card-text">Create, update and manage agents</p>
+
+                    <a asp-controller="Admin" asp-action="Agents"
+                           class="btn btn-warning">
+                        Go
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Employees -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Employees</h5>
+                    <p class="card-text">Handle employee records</p>
+
+                    <a asp-controller="Admin" asp-action="Employees"
+                           class="btn btn-dark">
+                        Go
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>

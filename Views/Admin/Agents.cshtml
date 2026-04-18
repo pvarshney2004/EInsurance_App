@@ -1,0 +1,45 @@
+﻿@model List<EInsurance_App.Models.InsuranceAgent>
+
+<div class="container mt-4">
+
+    <h2>All Agents</h2>
+
+    <a asp-action="CreateAgent" class="btn btn-primary mb-3">Add Agent</a>
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Full Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td>@a.AgentID</td>
+                        <td>@a.Username</td>
+                        <td>@a.Email</td>
+                        <td>@a.FullName</td>
+                        <td>
+                            <a asp-action="EditAgent" asp-route-id="@a.AgentID" class="btn btn-warning btn-sm">Edit</a>
+                            <a asp-action="DeleteAgent" asp-route-id="@a.AgentID" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Delete this agent?');">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">No agents found.</div>
+    }
+
+</div>

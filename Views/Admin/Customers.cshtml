@@ -1,0 +1,58 @@
+﻿@if (TempData["Error"] != null)
+{
+	<div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (TempData["Success"] != null)
+{
+	<div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@using EInsurance_App.ViewModels.Customer
+@model List<CustomerListVM>
+
+<div class="container mt-4">
+
+	<h2>All Customers</h2>
+
+	@if (Model != null && Model.Any())
+	{
+		<table class="table table-bordered mt-3">
+			<thead class="table-dark">
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Phone</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@foreach (var c in Model)
+				{
+					<tr>
+						<td>@c.CustomerID</td>
+						<td>@c.FullName</td>
+						<td>@c.Email</td>
+						<td>@c.Phone</td>
+						<td>
+							<a asp-action="EditCustomer" asp-route-id="@c.CustomerID" class="btn btn-warning btn-sm">Edit</a>
+							<a asp-action="DeleteCustomer" asp-route-id="@c.CustomerID" class="btn btn-danger btn-sm"
+								   onclick="return confirm('Are you sure you want to delete this customer?');">
+								Delete
+							</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<div class="alert alert-info mt-3 text-center">
+			No customers found. New users will appear here after registration.
+		</div>
+	}
+
+</div>
