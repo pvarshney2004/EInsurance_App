@@ -3,12 +3,12 @@
 ## 📌 Project Description
 The **E-Insurance Application** is a role-based web platform designed to digitize and streamline insurance operations. It allows different types of users—**Customers, Admins, Insurance Agents, and Employees**—to interact with the system based on their roles.
 
-The application provides secure authentication using **JWT (JSON Web Token)** and enables users to manage policies, payments, and administrative data efficiently. Customers can purchase and view policies, while admins have full control over managing users, banks, and customer-related data.
+The application provides secure authentication using **JWT (JSON Web Token)** and enables users to manage policies, payments, and administrative data efficiently. Customers can purchase and view policies, while admins have full control over managing users, and customer-related data.
 
 The system also focuses on:
 - Secure access with role-based authorization (RBAC)
 - Efficient policy and payment management
-- Administrative control over users and banking data
+- Administrative control over users data
 - Scalability and performance optimization
 
 ---
@@ -91,23 +91,23 @@ Customers can view their own policies and payment details. Admins can view polic
 
 ---
 
-## ⚙️ 3. Manage Users and Banks
+## ⚙️ 3. Manage Users
 
 ### **Actors**
 - Admin
 
 ### **Description**
-Admins can perform CRUD (Create, Read, Update, Delete) operations on users and banks.
+Admins can perform CRUD (Create, Read, Update, Delete) operations on users.
 
 ### **Preconditions**
 - Admin must be authenticated.
 
 ### **Postconditions**
-- User or bank data is successfully updated.
+- User data is successfully updated.
 
 ### **Steps**
 1. Admin logs in.
-2. Navigates to the **Manage Users/Banks** section.
+2. Navigates to the **Manage Users** section.
 3. Performs CRUD operations:
    - Create
    - Read
