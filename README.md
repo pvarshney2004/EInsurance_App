@@ -1,1 +1,106 @@
-# EInsurance_App
+# 🛡️ E-Insurance Application
+
+## 📌 Project Description
+The **E-Insurance Application** is a role-based web platform designed to digitize and streamline insurance operations. It allows different types of users—**Customers, Admins, Insurance Agents, and Employees**—to interact with the system based on their roles.
+
+The application provides secure authentication using **JWT (JSON Web Token)** and enables users to manage policies, payments, and administrative data efficiently. Customers can purchase and view policies, while admins have full control over managing users, banks, and customer-related data.
+
+The system also focuses on:
+- Secure access with role-based authorization (RBAC)
+- Efficient policy and payment management
+- Administrative control over users and banking data
+- Scalability and performance optimization
+
+---
+
+## 🎯 Key Features
+- 🔐 JWT-based Authentication & Authorization  
+- 📄 Policy Management (View & Track)  
+- 👤 Role-Based Access Control  
+- ⚙️ Admin Dashboard for User & Bank Management  
+- 💳 Payment & Policy Tracking  
+
+---
+
+## 🔐 1. User Authentication
+
+### **Actors**
+- Customer
+- Admin
+- Insurance Agent
+- Employee
+
+### **Description**
+Users can log in to the system using JWT authentication. Based on their role, they are granted appropriate access.
+
+### **Preconditions**
+- User must have a registered account.
+
+### **Postconditions**
+- User is authenticated.
+- JWT token is generated.
+- Role-based access is granted.
+
+### **Steps**
+1. User navigates to the login page.
+2. User enters credentials.
+3. System validates credentials.
+4. JWT token is generated.
+5. User is granted access based on role.
+
+---
+
+## 📄 2. View Policies
+
+### **Actors**
+- Customer
+- Admin
+
+### **Description**
+Customers can view their own policies and payment details. Admins can view policies of specific customers.
+
+### **Preconditions**
+- User must be authenticated.
+
+### **Postconditions**
+- Policy and payment details are displayed.
+
+### **Steps (Customer)**
+1. Customer logs in.
+2. Navigates to the **My Policies** section.
+3. System retrieves and displays policies and payment details.
+
+### **Steps (Admin)**
+1. Admin logs in.
+2. Navigates to the **Customer Policies** section.
+3. Searches for a customer.
+4. System retrieves and displays policies and payment details.
+
+---
+
+## ⚙️ 3. Manage Users and Banks
+
+### **Actors**
+- Admin
+
+### **Description**
+Admins can perform CRUD (Create, Read, Update, Delete) operations on users and banks.
+
+### **Preconditions**
+- Admin must be authenticated.
+
+### **Postconditions**
+- User or bank data is successfully updated.
+
+### **Steps**
+1. Admin logs in.
+2. Navigates to the **Manage Users/Banks** section.
+3. Performs CRUD operations:
+   - Create
+   - Read
+   - Update
+   - Delete
+4. System updates the database.
+5. Confirmation is displayed.
+
+---
