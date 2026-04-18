@@ -341,5 +341,89 @@ namespace EInsurance_App.Controllers
         }
 
 
+        // admin adding plan and scheme
+        public IActionResult Plans()
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var plans = _context.InsurancePlans.ToList();
+            return View(plans);
+        }
+
+        public IActionResult CreatePlan()
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreatePlan(InsurancePlan model)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            ModelState.Remove("Schemes");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            _context.InsurancePlans.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Plans");
+        }
+
+        public IActionResult SchemesByPlan(int planId)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var schemes = _context.Schemes
+                .Where(s => s.PlanID == planId)
+                .ToList();
+
+            ViewBag.PlanId = planId;
+
+            return View(schemes);
+        }
+
+        public IActionResult CreateScheme(int planId)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var scheme = new Scheme
+            {
+                PlanID = planId
+            };
+
+            return View(scheme);
+        }
+
+        [HttpPost]
+        public IActionResult CreateScheme(Scheme model)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            ModelState.Remove("Plan");
+            ModelState.Remove("Policies");
+            ModelState.Remove("EmployeeSchemes");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            _context.Schemes.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("SchemesByPlan", new { planId = model.PlanID });
+        }
+
+
+
+
     }
 }

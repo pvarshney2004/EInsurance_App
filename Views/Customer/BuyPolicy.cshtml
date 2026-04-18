@@ -1,0 +1,39 @@
+﻿@model EInsurance_App.ViewModels.Policy.BuyPolicyVM
+
+<div class="container mt-4">
+
+    <h2>Buy Policy</h2>
+
+    <h5 class="text-primary">Scheme: @ViewBag.SchemeName</h5>
+
+    <form asp-action="BuyPolicy" method="post">
+
+        <input type="hidden" asp-for="SchemeID" />
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label>Policy Details</label>
+            <input asp-for="PolicyDetails" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Premium</label>
+            <input asp-for="Premium" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Maturity Period (Years)</label>
+            <input asp-for="MaturityPeriod" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Confirm Purchase</button>
+        <a asp-action="AvailablePolicies" class="btn btn-secondary">Cancel</a>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,41 @@
+﻿@model List<EInsurance_App.ViewModels.Policy.AvailablePolicyVM>
+
+<div class="container mt-4">
+
+    <h2>Available Policies</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No policies available</div>
+    }
+
+    @foreach (var plan in Model)
+    {
+        <div class="card mt-3">
+            <div class="card-header bg-dark text-white">
+                <h5>@plan.PlanName</h5>
+            </div>
+
+            <div class="card-body">
+
+                @foreach (var scheme in plan.Schemes)
+                {
+                    <div class="border p-3 mb-2 rounded">
+
+                        <h6>@scheme.SchemeName</h6>
+                        <p>@scheme.SchemeDetails</p>
+
+                        <a asp-action="BuyPolicy"
+                               asp-route-schemeId="@scheme.SchemeID"
+                               class="btn btn-success btn-sm">
+                            Buy
+                        </a>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+
+</div>

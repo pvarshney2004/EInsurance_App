@@ -133,7 +133,7 @@ namespace EInsurance_App.Controllers
             {
                 "Admin" => RedirectToAction("Dashboard", "Admin"),
                 "Agent" => RedirectToAction("Dashboard", "Agent"),
-                "Customer" => RedirectToAction("MyPolicies", "Customer"),
+                "Customer" => RedirectToAction("Dashboard", "Customer"),
                 _ => RedirectToAction("Dashboard", "Employee")
             };
         }
@@ -157,6 +157,22 @@ namespace EInsurance_App.Controllers
                 signingCredentials: creds
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public IActionResult RedirectDashboard()
+        {
+            var role = HttpContext.Session.GetString("Role");
+
+            if (string.IsNullOrEmpty(role))
+                return RedirectToAction("Login");
+
+            return role switch
+            {
+                "Admin" => RedirectToAction("Dashboard", "Admin"),
+                "Agent" => RedirectToAction("Dashboard", "Agent"),
+                "Customer" => RedirectToAction("Dashboard", "Customer"),
+                _ => RedirectToAction("Dashboard", "Employee")
+            };
         }
     }
 }

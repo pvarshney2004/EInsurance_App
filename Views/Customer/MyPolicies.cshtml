@@ -1,43 +1,118 @@
-﻿@using EInsurance_App.ViewModels.Policy
+﻿@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@using EInsurance_App.ViewModels.Policy
 @model CustomerPolicyVM
 
 <div class="container mt-4">
-    <h2>@Model.CustomerName - My Policies</h2>
+
+    ```
+    <h2 class="mb-4">@Model.CustomerName - My Policies</h2>
 
     @if (!Model.Policies.Any())
     {
-        <p>No policies found</p>
+        <div class="alert alert-info text-center">
+            No policies found. Start by purchasing one!
+        </div>
     }
 
     @foreach (var policy in Model.Policies)
     {
-        <div class="card mt-3">
-            <div class="card-body">
+        <div class="card mb-4 shadow border-0">
 
-                <h5>Policy ID: @policy.PolicyID</h5>
-                <p><strong>Scheme:</strong> @policy.SchemeName</p>
-                <p><strong>Premium:</strong> ₹@policy.Premium</p>
-                <p><strong>Issued:</strong> @policy.DateIssued.ToShortDateString()</p>
+            <!-- Policy Header -->
+            <div class="card-header bg-dark text-white d-flex justify-content-between">
+                <h5 class="mb-0">Policy ID: @policy.PolicyID</h5>
 
-                <h6>Payments:</h6>
-
-                @if (policy.Payments.Any())
+                @if (policy.RemainingAmount == 0)
                 {
-                    <ul>
-                        @foreach (var pay in policy.Payments)
-                        {
-                            <li>
-                                ₹@pay.Amount - @pay.PaymentDate.ToShortDateString()
-                            </li>
-                        }
-                    </ul>
+                    <span class="badge bg-success">Fully Paid</span>
                 }
                 else
                 {
-                    <p>No payments yet</p>
+                    <span class="badge bg-warning text-dark">
+                        ₹@policy.RemainingAmount Pending
+                    </span>
                 }
+            </div>
+
+            <div class="card-body">
+
+                <!-- Policy Details -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Scheme:</strong><br />
+                        @policy.SchemeName
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Total Premium:</strong><br />
+                        ₹@policy.Premium
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Issued Date:</strong><br />
+                        @policy.DateIssued.ToString("dd MMM yyyy")
+                    </div>
+                </div>
+
+                <!-- Payments Section -->
+                <h6 class="mt-3 mb-2">Payments</h6>
+
+                @if (policy.Payments.Any())
+                {
+                    <table class="table table-bordered table-sm align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var pay in policy.Payments)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-success">
+                                            ₹@pay.Amount
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @pay.PaymentDate.ToString("dd MMM yyyy")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-muted">No payments yet</p>
+                }
+
+                <!-- Action -->
+                <div class="mt-3 d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <strong>Remaining:</strong>
+                        <span class="badge bg-warning text-dark">
+                            ₹@policy.RemainingAmount
+                        </span>
+                    </div>
+
+                    @if (policy.RemainingAmount > 0)
+                    {
+                        <a asp-action="MakePayment"
+                               asp-route-policyId="@policy.PolicyID"
+                               class="btn btn-success btn-sm">
+                            Pay Premium
+                        </a>
+                    }
+                </div>
 
             </div>
         </div>
     }
+    ```
+
 </div>

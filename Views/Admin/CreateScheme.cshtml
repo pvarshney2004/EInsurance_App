@@ -1,0 +1,26 @@
+﻿@model EInsurance_App.Models.Scheme
+
+<div class="container mt-4">
+
+    <h2>Create Scheme</h2>
+
+    <form asp-action="CreateScheme" method="post">
+
+        <input type="hidden" asp-for="PlanID" />
+
+        <div class="mb-3">
+            <label>Scheme Name</label>
+            <input asp-for="SchemeName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Details</label>
+            <input asp-for="SchemeDetails" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Create</button>
+        <a asp-action="Plans" class="btn btn-secondary">Cancel</a>
+
+    </form>
+
+</div>

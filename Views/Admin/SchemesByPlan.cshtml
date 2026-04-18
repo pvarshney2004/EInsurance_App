@@ -1,0 +1,40 @@
+﻿@model List<EInsurance_App.Models.Scheme>
+
+<div class="container mt-4">
+
+    <h2>Schemes</h2>
+
+    <a asp-action="CreateScheme" asp-route-planId="@ViewBag.PlanId"
+           class="btn btn-primary mb-3">
+        Add Scheme
+    </a>
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>@s.SchemeID</td>
+                        <td>@s.SchemeName</td>
+                        <td>@s.SchemeDetails</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">No schemes found.</div>
+    }
+
+</div>

@@ -1,0 +1,32 @@
+﻿@model EInsurance_App.Models.InsurancePlan
+
+<div class="container mt-4">
+
+    <h2>Create Insurance Plan</h2>
+
+    <form asp-action="CreatePlan" method="post">
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label>Plan Name</label>
+            <input asp-for="PlanName" class="form-control" placeholder="Enter plan name" />
+            <span asp-validation-for="PlanName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label>Plan Details</label>
+            <textarea asp-for="PlanDetails" class="form-control" rows="3" placeholder="Enter plan details"></textarea>
+            <span asp-validation-for="PlanDetails" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Create Plan</button>
+        <a asp-action="Plans" class="btn btn-secondary">Cancel</a>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

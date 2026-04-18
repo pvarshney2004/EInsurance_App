@@ -1,0 +1,50 @@
+﻿@model List<EInsurance_App.Models.InsurancePlan>
+
+<div class="container mt-4">
+
+    <h2>Insurance Plans</h2>
+
+    <a asp-action="CreatePlan" class="btn btn-primary mb-3">Add Plan</a>
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Details</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.PlanID</td>
+                        <td>@p.PlanName</td>
+                        <td>@p.PlanDetails</td>
+                        <td>
+                            <!-- 🔥 KEY FEATURE -->
+                            <a asp-action="SchemesByPlan" asp-route-planId="@p.PlanID"
+                                   class="btn btn-info btn-sm">
+                                View Schemes
+                            </a>
+
+                            <a asp-action="CreateScheme" asp-route-planId="@p.PlanID"
+                                   class="btn btn-success btn-sm">
+                                Add Scheme
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">No plans found.</div>
+    }
+
+</div>

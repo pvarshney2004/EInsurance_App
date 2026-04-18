@@ -1,0 +1,28 @@
+﻿@model EInsurance_App.ViewModels.Payment.MakePaymentVM
+
+<div class="container mt-4">
+
+    <h2>Make Payment</h2>
+
+    <form asp-action="MakePayment" method="post">
+
+        <input type="hidden" asp-for="PolicyID" />
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label>Enter Amount</label>
+            <input asp-for="Amount" class="form-control" />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Pay</button>
+        <a asp-action="MyPolicies" class="btn btn-secondary">Cancel</a>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
