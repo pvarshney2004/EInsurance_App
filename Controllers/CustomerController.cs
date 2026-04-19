@@ -1,5 +1,6 @@
 ﻿using EInsurance_App.Data;
 using EInsurance_App.Models;
+using EInsurance_App.ViewModels;
 using EInsurance_App.ViewModels.Payment;
 using EInsurance_App.ViewModels.Policy;
 using Microsoft.AspNetCore.Mvc;
@@ -106,7 +107,7 @@ namespace EInsurance_App.Controllers
         }
 
         // buy policy
-        public IActionResult BuyPolicy(int schemeId)
+        public IActionResult BuyPolicy(int schemeId, decimal premium, int duration)
         {
             var auth = AuthorizeRole("Customer");
             if (auth != null) return auth;
@@ -116,7 +117,9 @@ namespace EInsurance_App.Controllers
 
             var vm = new BuyPolicyVM
             {
-                SchemeID = schemeId
+                SchemeID = schemeId,
+                Premium = premium,
+                MaturityPeriod = duration
             };
 
             ViewBag.SchemeName = scheme.SchemeName;
@@ -235,6 +238,102 @@ namespace EInsurance_App.Controllers
             TempData["Success"] = "Payment successful";
 
             return RedirectToAction("MyPolicies");
+        }
+
+        // uc-05
+        public IActionResult PremiumCalculator(int schemeId)
+        {
+            var auth = AuthorizeRole("Customer");
+            if (auth != null) return auth;
+
+            var scheme = _context.Schemes.Find(schemeId);
+            if (scheme == null) return NotFound();
+
+            var vm = new PremiumCalculatorVM
+            {
+                SchemeID = schemeId
+            };
+
+            ViewBag.SchemeName = scheme.SchemeName;
+
+            return View(vm);
+        }
+        [HttpPost]
+        public IActionResult PremiumCalculator(PremiumCalculatorVM model)
+        {
+            var auth = AuthorizeRole("Customer");
+            if (auth != null) return auth;
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var scheme = _context.Schemes.Find(model.SchemeID);
+            if (scheme == null) return NotFound();
+
+            decimal baseAmount = 5000;
+            decimal ageFactor = 100;
+            decimal interestRate = 200;
+
+            var premium =
+                baseAmount +
+                (model.Age * ageFactor) +
+                (model.Duration * interestRate);
+
+            return RedirectToAction("BuyPolicy", new
+            {
+                schemeId = model.SchemeID,
+                premium = premium,
+                duration = model.Duration
+            });
+        }
+
+        // assiging agent to the customer
+        public IActionResult SelectAgent()
+        {
+            var auth = AuthorizeRole("Customer");
+            if (auth != null) return auth;
+
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            var customer = _context.Customers
+                .FirstOrDefault(x => x.Email == email);
+
+            if (customer == null)
+                return RedirectToAction("Login", "Account");
+
+            // Already assigned agent
+            if (customer.AgentID != null)
+            {
+                var agent = _context.InsuranceAgents
+                    .FirstOrDefault(a => a.AgentID == customer.AgentID);
+
+                ViewBag.AssignedAgent = agent;
+            }
+
+            // Always load agents list
+            ViewBag.Agents = _context.InsuranceAgents.ToList();
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SelectAgent(int agentId)
+        {
+            var auth = AuthorizeRole("Customer");
+            if (auth != null) return auth;
+
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            var customer = _context.Customers
+                .FirstOrDefault(x => x.Email == email);
+
+            if (customer == null)
+                return RedirectToAction("Login", "Account");
+
+            // Update or assign
+            customer.AgentID = agentId;
+            _context.SaveChanges();
+            TempData["Success"] = "Agent updated successfully ✅";
+            return RedirectToAction("Dashboard");
         }
     }
 }

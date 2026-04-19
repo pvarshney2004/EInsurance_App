@@ -1,0 +1,36 @@
+﻿@model EInsurance_App.ViewModels.PremiumCalculatorVM
+
+<div class="container mt-4">
+
+    <h2>Premium Calculator (Agent)</h2>
+
+    <h5>Scheme: @ViewBag.SchemeName</h5>
+
+    <form method="post">
+
+        <input type="hidden" asp-for="SchemeID" />
+
+        <div class="mb-3">
+            <label>Age</label>
+            <input asp-for="Age" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Duration (Years)</label>
+            <input asp-for="Duration" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Calculate
+        </button>
+
+    </form>
+
+    @if (Model != null && Model.CalculatedPremium > 0)
+    {
+        <div class="alert alert-success mt-3">
+            <strong>Calculated Premium:</strong> ₹@Model.CalculatedPremium
+        </div>
+    }
+
+</div>

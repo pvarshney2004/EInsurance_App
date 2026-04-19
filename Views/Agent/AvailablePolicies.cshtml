@@ -24,13 +24,8 @@
 
                         <h6>@scheme.SchemeName</h6>
                         <p>@scheme.SchemeDetails</p>
-
-                        <a asp-action="BuyPolicy"
-                               asp-route-schemeId="@scheme.SchemeID"
-                               class="btn btn-success btn-sm">
-                            Buy
-                        </a>
-                        <a asp-action="PremiumCalculator"
+                        <a asp-controller="Agent"
+                               asp-action="PremiumCalculator"
                                asp-route-schemeId="@scheme.SchemeID"
                                class="btn btn-warning btn-sm">
                             Calculate Premium
