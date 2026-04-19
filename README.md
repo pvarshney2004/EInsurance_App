@@ -143,6 +143,33 @@ Customers can browse available insurance policies and purchase one or multiple p
 
 ---
 
+## 💰 5. Premium Calculation
+
+### **Actors**
+- Customer  
+- Insurance Agent  
+
+### **Description**
+Users can calculate the premium amount for a selected policy based on factors such as age, policy type, and rate of interest.
+
+### **Preconditions**
+- User must be authenticated.
+
+### **Postconditions**
+- Premium amount is calculated and displayed.
+
+### **Steps**
+1. User logs in.
+2. Navigates to the **Premium Calculator** section.
+3. Enters required details:
+   - Age  
+   - Policy type  
+   - Other relevant inputs  
+4. System calculates the premium based on provided inputs.
+5. Calculated premium amount is displayed to the user.
+
+---
+
 ## 👤 Author
 **Prashant Varshney**  
 B.Tech CSE (Data Analytics) 
