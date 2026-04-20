@@ -188,6 +188,30 @@ Admin calculates commission for insurance agents based on policies sold.
 
 ---
 
+## 📥 UC-07: Download Receipt / Invoice
+
+### **Actors**
+Customer  
+
+### **Description**
+Customers can download receipts or invoices for their policy payments.
+
+### **Preconditions**
+- Customer must be authenticated.
+
+### **Postconditions**
+- Receipt/Invoice is generated and downloaded.
+
+### **Steps**
+1. Login as Customer  
+2. Navigate to **Payments** section  
+3. Select a payment record  
+4. System generates receipt/invoice  
+5. Download option is provided  
+6. Customer downloads the document  
+
+---
+
 ## 👤 Author
 **Prashant Varshney**  
 B.Tech CSE (Data Analytics)  
