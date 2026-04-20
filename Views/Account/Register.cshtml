@@ -16,36 +16,42 @@
                         <div class="mb-3">
                             <label asp-for="FullName" class="form-label"></label>
                             <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label"></label>
                             <input asp-for="Email" class="form-control" placeholder="Enter email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <!-- Phone -->
                         <div class="mb-3">
                             <label asp-for="Phone" class="form-label"></label>
                             <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
 
                         <!-- DOB -->
                         <div class="mb-3">
                             <label asp-for="DateOfBirth" class="form-label"></label>
                             <input asp-for="DateOfBirth" type="date" class="form-control" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                         </div>
 
                         <!-- Password -->
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label"></label>
                             <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
 
                         <!-- Confirm Password -->
                         <div class="mb-3">
                             <label asp-for="ConfirmPassword" class="form-label"></label>
                             <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
 
                         <!-- Button -->

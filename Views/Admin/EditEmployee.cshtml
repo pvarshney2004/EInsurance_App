@@ -11,16 +11,19 @@
         <div class="mb-3">
             <label>Username</label>
             <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label>Email</label>
             <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label>Full Name</label>
             <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -30,6 +33,7 @@
                 <option value="Executive">Executive</option>
                 <option value="Support">Support</option>
             </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
         </div>
 
         <button type="submit" class="btn btn-success">Update</button>
