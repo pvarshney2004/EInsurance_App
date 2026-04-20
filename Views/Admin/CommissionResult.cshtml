@@ -1,0 +1,50 @@
+﻿@model List<EInsurance_App.Models.Policy>
+
+<div class="container mt-4">
+
+    <h2>Commission Details</h2>
+
+    <div class="alert alert-info">
+        <strong>Agent:</strong> @ViewBag.AgentName <br />
+        <strong>Total Policies:</strong> @ViewBag.TotalPolicies <br />
+        <strong>Total Commission:</strong> ₹@ViewBag.TotalCommission
+    </div>
+
+    @if (!Model.Any())
+    {
+        <!-- Empty State -->
+        <div class="alert alert-warning text-center mt-4">
+            <h5>No policies found for this agent</h5>
+            <p>This agent has not sold any policies yet.</p>
+        </div>
+    }
+    else
+    {
+        <!-- Table -->
+        <table class="table table-bordered mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Policy ID</th>
+                    <th>Customer ID</th>
+                    <th>Premium</th>
+                    <th>Commission (10%)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.PolicyID</td>
+                        <td>@p.CustomerID</td>
+                        <td>₹@p.Premium</td>
+                        <td class="text-success fw-bold">
+                            ₹@(p.Premium * 0.10m)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+</div>

@@ -1,5 +1,7 @@
 ﻿using EInsurance_App.Data;
 using EInsurance_App.ViewModels;
+using EInsurance_App.ViewModels.Agent;
+using EInsurance_App.ViewModels.Commission;
 using EInsurance_App.ViewModels.Policy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,16 +28,19 @@ namespace EInsurance_App.Controllers
             if (agent == null)
                 return RedirectToAction("Login", "Account");
 
-            // Customers linked to this agent
             var totalCustomers = _context.Customers
                 .Count(c => c.AgentID == agent.AgentID);
 
-            // Policies sold by this agent
             var totalPolicies = _context.Policies
                 .Count(p => p.Customer.AgentID == agent.AgentID);
 
+            var totalCommission = _context.Commissions
+                .Where(c => c.AgentID == agent.AgentID)
+                .Sum(c => (decimal?)c.CommissionAmount) ?? 0;
+
             ViewBag.TotalCustomers = totalCustomers;
             ViewBag.TotalPolicies = totalPolicies;
+            ViewBag.TotalCommission = totalCommission;
 
             return View();
         }
@@ -99,6 +104,100 @@ namespace EInsurance_App.Controllers
             ViewBag.SchemeName = scheme.SchemeName;
 
             return View(model); // same page 
+        }
+
+        public IActionResult CommissionHistory()
+        {
+            var auth = AuthorizeRole("Agent");
+            if (auth != null) return auth;
+
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            var agent = _context.InsuranceAgents
+                .FirstOrDefault(x => x.Email == email);
+
+            if (agent == null)
+                return RedirectToAction("Login", "Account");
+
+            var commissions = _context.Commissions
+                .Where(c => c.AgentID == agent.AgentID)
+                .Select(c => new CommissionHistoryVM
+                {
+                    CommissionID = c.CommissionID,
+                    PolicyID = c.Policy.PolicyID,
+                    CustomerName = c.Policy.Customer.FullName,
+                    Premium = c.Policy.Premium,
+                    CommissionAmount = c.CommissionAmount,
+                    CreatedAt = c.CreatedAt
+                })
+                .ToList();
+
+            ViewBag.AgentName = agent.FullName;
+
+            return View(commissions);
+        }
+
+        public IActionResult Customers()
+        {
+            var auth = AuthorizeRole("Agent");
+            if (auth != null) return auth;
+
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            var agent = _context.InsuranceAgents
+                .FirstOrDefault(x => x.Email == email);
+
+            if (agent == null)
+                return RedirectToAction("Login", "Account");
+
+            var customers = _context.Customers
+                .Where(c => c.AgentID == agent.AgentID)
+                .Select(c => new CustomerListVM
+                {
+                    CustomerID = c.CustomerID,
+                    FullName = c.FullName,
+                    Email = c.Email,
+                    Phone = c.Phone,
+                    PolicyCount = c.Policies.Count()
+                })
+                .ToList();
+
+            ViewBag.AgentName = agent.FullName;
+
+            return View(customers);
+        }
+
+        public IActionResult CustomerPolicies(int customerId)
+        {
+            var auth = AuthorizeRole("Agent");
+            if (auth != null) return auth;
+
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            var agent = _context.InsuranceAgents
+                .FirstOrDefault(x => x.Email == email);
+
+            if (agent == null)
+                return RedirectToAction("Login", "Account");
+
+            var isValidCustomer = _context.Customers
+                .Any(c => c.CustomerID == customerId && c.AgentID == agent.AgentID);
+
+            if (!isValidCustomer)
+                return Unauthorized();
+
+            var policies = _context.Policies
+                .Where(p => p.CustomerID == customerId)
+                .Select(p => new ViewModels.Agent.CustomerPolicyVM
+                {
+                    PolicyID = p.PolicyID,
+                    Premium = p.Premium,
+                    DateIssued = p.DateIssued,
+                    SchemeName = p.Scheme.SchemeName
+                })
+                .ToList();
+
+            return View(policies);
         }
 
     }

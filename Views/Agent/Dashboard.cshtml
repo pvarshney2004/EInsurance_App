@@ -6,19 +6,31 @@
     <div class="row text-center mb-4">
 
         <div class="col-md-4 mb-3">
-            <div class="card shadow border-0 bg-light">
+            <div class="card shadow border-0 bg-light h-100">
                 <div class="card-body">
-                    <h5>Total Customers</h5>
-                    <h3 class="text-primary">@ViewBag.TotalCustomers</h3>
+                    <h6 class="text-muted">Total Customers</h6>
+                    <h2 class="text-primary">@ViewBag.TotalCustomers</h2>
+                    <small class="text-muted">Customers linked to you</small>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4 mb-3">
-            <div class="card shadow border-0 bg-light">
+            <div class="card shadow border-0 bg-light h-100">
                 <div class="card-body">
-                    <h5>Policies Sold</h5>
-                    <h3 class="text-success">@ViewBag.TotalPolicies</h3>
+                    <h6 class="text-muted">Policies Sold</h6>
+                    <h2 class="text-success">@ViewBag.TotalPolicies</h2>
+                    <small class="text-muted">Total policies handled</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow border-0 bg-light h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Commission</h6>
+                    <h2 class="text-warning">₹@ViewBag.TotalCommission</h2>
+                    <small class="text-muted">Your total earnings</small>
                 </div>
             </div>
         </div>
@@ -33,12 +45,44 @@
             <div class="card shadow h-100 text-center">
                 <div class="card-body">
                     <h5 class="card-title">Calculate Premium</h5>
-                    <p class="card-text">Help customers estimate premium</p>
+                    <p class="card-text">Estimate premium for customers</p>
 
                     <a asp-controller="Agent"
-                       asp-action="AvailablePolicies"
-                       class="btn btn-warning">
+                           asp-action="AvailablePolicies"
+                           class="btn btn-warning w-100">
                         Go
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commission History -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Commission History</h5>
+                    <p class="card-text">View all your earnings</p>
+
+                    <a asp-controller="Agent"
+                           asp-action="CommissionHistory"
+                           class="btn btn-primary w-100">
+                        View
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers List -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">My Customers</h5>
+                    <p class="card-text">View assigned customers</p>
+
+                    <a asp-controller="Agent"
+                           asp-action="Customers"
+                           class="btn btn-success w-100">
+                        Open
                     </a>
                 </div>
             </div>

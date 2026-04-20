@@ -1,0 +1,39 @@
+﻿@model List<EInsurance_App.ViewModels.Agent.CustomerPolicyVM>
+
+<div class="container mt-4">
+
+    <h2>Customer Policies</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            No policies found for this customer
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Policy ID</th>
+                    <th>Scheme</th>
+                    <th>Premium</th>
+                    <th>Issued Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.PolicyID</td>
+                        <td>@p.SchemeName</td>
+                        <td>₹@p.Premium</td>
+                        <td>@p.DateIssued.ToString("dd MMM yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+</div>

@@ -1,0 +1,28 @@
+﻿@model List<EInsurance_App.Models.InsuranceAgent>
+
+<div class="container mt-4">
+
+    <h2>Commission Calculator</h2>
+
+    <form method="post">
+
+        <div class="mb-3">
+            <label>Select Agent</label>
+
+            <select name="agentId" class="form-control">
+                @foreach (var a in Model)
+                {
+                    <option value="@a.AgentID">
+                        @a.FullName (@a.Email)
+                    </option>
+                }
+            </select>
+        </div>
+
+        <button class="btn btn-primary">
+            Calculate Commission
+        </button>
+
+    </form>
+
+</div>

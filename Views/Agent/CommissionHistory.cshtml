@@ -1,0 +1,48 @@
+﻿@model List<EInsurance_App.ViewModels.Commission.CommissionHistoryVM>
+
+<div class="container mt-4">
+
+    <h2>Commission History</h2>
+
+    <div class="alert alert-info">
+        <strong>Agent:</strong> @ViewBag.AgentName
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            <h5>No commission records found</h5>
+            <p>You haven’t earned any commission yet.</p>
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Policy</th>
+                    <th>Customer</th>
+                    <th>Premium</th>
+                    <th>Commission</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td>@c.CommissionID</td>
+                        <td>@c.PolicyID</td>
+                        <td>@c.CustomerName</td>
+                        <td>₹@c.Premium</td>
+                        <td class="text-success fw-bold">₹@c.CommissionAmount</td>
+                        <td>@c.CreatedAt.ToString("dd MMM yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+</div>

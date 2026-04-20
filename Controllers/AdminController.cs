@@ -423,7 +423,76 @@ namespace EInsurance_App.Controllers
         }
 
 
+        // uc-06
+        public IActionResult CommissionCalculator()
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
 
+            var agents = _context.InsuranceAgents.ToList();
 
+            return View(agents);
+        }
+
+        [HttpPost]
+        public IActionResult CommissionCalculator(int agentId)
+        {
+            var auth = AuthorizeRole("Admin");
+            if (auth != null) return auth;
+
+            var agent = _context.InsuranceAgents
+                .FirstOrDefault(a => a.AgentID == agentId);
+
+            if (agent == null)
+                return NotFound();
+
+            var customerIds = _context.Customers
+                .Where(c => c.AgentID == agentId)
+                .Select(c => c.CustomerID)
+                .ToList();
+
+            var policies = _context.Policies
+                .Where(p => customerIds.Contains(p.CustomerID))
+                .ToList();
+
+            List<Commission> newCommissions = new List<Commission>();
+
+            foreach (var policy in policies)
+            {
+                // Checking if commission already exists
+                bool exists = _context.Commissions
+                    .Any(c => c.PolicyID == policy.PolicyID && c.AgentID == agentId);
+
+                if (!exists)
+                {
+                    var commissionAmount = policy.Premium * 0.10m;
+
+                    var commission = new Commission
+                    {
+                        AgentID = agentId,
+                        PolicyID = policy.PolicyID,
+                        CommissionAmount = commissionAmount
+                    };
+
+                    newCommissions.Add(commission);
+                }
+            }
+
+            if (newCommissions.Any())
+            {
+                _context.Commissions.AddRange(newCommissions);
+                _context.SaveChanges();
+            }
+
+            var totalCommission = _context.Commissions
+                .Where(c => c.AgentID == agentId)
+                .Sum(c => (decimal?)c.CommissionAmount) ?? 0;
+
+            ViewBag.AgentName = agent.FullName;
+            ViewBag.TotalPolicies = policies.Count;
+            ViewBag.TotalCommission = totalCommission;
+
+            return View("CommissionResult", policies);
+        }
     }
 }
