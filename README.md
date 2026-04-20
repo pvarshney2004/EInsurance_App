@@ -170,6 +170,30 @@ Users can calculate the premium amount for a selected policy based on factors su
 
 ---
 
+## 📊 6. Commission Calculation
+
+### **Actors**
+- Admin  
+
+### **Description**
+Admins can calculate the commission earned by insurance agents based on the policies they have sold.
+
+### **Preconditions**
+- Admin must be authenticated.
+
+### **Postconditions**
+- Commission details are calculated and displayed.
+
+### **Steps**
+1. Admin logs in.
+2. Navigates to the **Commission Calculator** section.
+3. Selects an insurance agent.
+4. System retrieves all policies sold by the selected agent.
+5. System calculates the commission based on predefined rules.
+6. Commission details are displayed to the admin.
+
+---
+
 ## 👤 Author
 **Prashant Varshney**  
 B.Tech CSE (Data Analytics) 
