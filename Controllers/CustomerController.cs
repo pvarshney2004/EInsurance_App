@@ -1,9 +1,11 @@
 ﻿using EInsurance_App.Data;
 using EInsurance_App.Models;
+using EInsurance_App.Services.Pdf;
 using EInsurance_App.ViewModels;
 using EInsurance_App.ViewModels.Payment;
 using EInsurance_App.ViewModels.Policy;
 using Microsoft.AspNetCore.Mvc;
+using QuestPDF.Fluent;
 
 namespace EInsurance_App.Controllers
 {
@@ -334,6 +336,55 @@ namespace EInsurance_App.Controllers
             _context.SaveChanges();
             TempData["Success"] = "Agent updated successfully ✅";
             return RedirectToAction("Dashboard");
+        }
+
+        // uc-07 generating invoice
+        public IActionResult GenerateInvoice(int paymentId)
+        {
+            var auth = AuthorizeRole("Customer");
+            if (auth != null) return auth;
+
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            var customer = _context.Customers
+                .FirstOrDefault(x => x.Email == email);
+
+            if (customer == null)
+                return RedirectToAction("Login", "Account");
+
+            var payment = _context.Payments
+                .Where(p => p.PaymentID == paymentId)
+                .Select(p => new
+                {
+                    p.PaymentID,
+                    p.Amount,
+                    p.PaymentDate,
+                    p.PolicyID,
+                    CustomerID = p.CustomerID,
+                    SchemeName = p.Policy.Scheme.SchemeName
+                })
+                .FirstOrDefault();
+
+            if (payment == null)
+                return NotFound();
+
+            // SECURITY CHECK
+            if (payment.CustomerID != customer.CustomerID)
+                return Unauthorized();
+
+            // Generate PDF
+            var document = new InvoiceDocument(
+                customer.FullName,
+                payment.SchemeName,
+                payment.PolicyID,
+                payment.Amount,
+                payment.PaymentDate
+            );
+
+            var pdfBytes = document.GeneratePdf();
+
+            return File(pdfBytes, "application/pdf",
+                $"Invoice_{payment.PaymentID}.pdf");
         }
     }
 }

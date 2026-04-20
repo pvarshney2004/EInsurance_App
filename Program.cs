@@ -1,5 +1,6 @@
 using EInsurance_App.Data;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
 
 namespace EInsurance_App
 {
@@ -15,6 +16,8 @@ namespace EInsurance_App
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddSession();
+
+            QuestPDF.Settings.License = LicenseType.Community;
 
             var app = builder.Build();
 
