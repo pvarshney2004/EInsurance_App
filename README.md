@@ -212,6 +212,29 @@ Customers can download receipts or invoices for their policy payments.
 
 ---
 
+## ✅ UC-08: Data Validation
+
+### **Actors**
+Customer, Admin, Insurance Agent, Employee  
+
+### **Description**
+The system enforces validation rules to ensure that only correct and complete data is stored.
+
+### **Preconditions**
+- User must be authenticated.
+
+### **Postconditions**
+- Only valid data is saved in the system.
+
+### **Steps**
+1. User attempts to create or update data  
+2. System validates input fields (e.g., required fields, email format, data types)  
+3. If validation fails, error messages are displayed  
+4. User corrects the data  
+5. System accepts and saves valid data  
+
+---
+
 ## 👤 Author
 **Prashant Varshney**  
 B.Tech CSE (Data Analytics)  
