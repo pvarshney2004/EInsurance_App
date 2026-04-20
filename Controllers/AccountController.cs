@@ -138,6 +138,12 @@ namespace EInsurance_App.Controllers
             };
         }
 
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();  
+            return RedirectToAction("Login", "Account");
+        }
+
         private string GenerateJwtToken(string email, string role)
         {
             var claims = new[]
