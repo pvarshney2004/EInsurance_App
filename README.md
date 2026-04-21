@@ -235,6 +235,29 @@ The system enforces validation rules to ensure that only correct and complete da
 
 ---
 
+## 📄 UC-09: Pagination for getAll Functions
+
+### **Actors**
+Admin  
+
+### **Description**
+The system implements pagination for all "getAll" operations to improve performance and usability when handling large datasets.
+
+### **Preconditions**
+- User must be authenticated.
+
+### **Postconditions**
+- Data is displayed in paginated format.
+
+### **Steps**
+1. User logs in  
+2. Navigates to a data listing section (e.g., policies, users)  
+3. System displays the first page of results  
+4. User uses pagination controls (next/previous/page number)  
+5. System fetches and displays the selected page of data  
+
+---
+
 ## 👤 Author
 **Prashant Varshney**  
 B.Tech CSE (Data Analytics)  
