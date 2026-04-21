@@ -92,18 +92,18 @@ namespace EInsurance_App.Controllers
             var scheme = _context.Schemes.Find(model.SchemeID);
             if (scheme == null) return NotFound();
 
-            decimal baseAmount = 5000;
-            decimal ageFactor = 100;
-            decimal interestRate = 200;
+            decimal baseRate = 0.02m;     // 2% of coverage
+            decimal ageFactor = 0.001m;   // risk increases with age
+            decimal durationFactor = 0.005m;
 
             model.CalculatedPremium =
-                baseAmount +
-                (model.Age * ageFactor) +
-                (model.Duration * interestRate);
+                (model.CoverageAmount * baseRate) +
+                (model.CoverageAmount * model.Age * ageFactor) +
+                (model.CoverageAmount * model.Duration * durationFactor);
 
             ViewBag.SchemeName = scheme.SchemeName;
 
-            return View(model); // same page 
+            return View(model); // stay on same page
         }
 
         public IActionResult CommissionHistory()

@@ -1,37 +1,56 @@
-﻿@model EInsurance_App.ViewModels.Policy.BuyPolicyVM
+@model EInsurance_App.ViewModels.Policy.BuyPolicyVM
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-cart-check"></i></div>
     <h2>Buy Policy</h2>
+</div>
 
-    <h5 class="text-primary">Scheme: @ViewBag.SchemeName</h5>
+<div class="alert alert-info mb-3">
+    <i class="bi bi-clipboard2-data me-1"></i><strong>Scheme:</strong> @ViewBag.SchemeName
+</div>
 
-    <form asp-action="BuyPolicy" method="post">
+<div class="card" style="max-width:540px;border-radius:14px;border:none;box-shadow:0 4px 20px rgba(15,31,61,0.09);">
+    <div class="card-body p-4">
+        <form asp-action="BuyPolicy" method="post">
 
-        <input type="hidden" asp-for="SchemeID" />
+            <input type="hidden" asp-for="SchemeID" />
+            <input type="hidden" asp-for="Premium" />
+            <input type="hidden" asp-for="MaturityPeriod" />
+            <input type="hidden" asp-for="CoverageAmount" />
+            <input type="hidden" asp-for="Age" />
 
-        <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="mb-3">
+                <label>Coverage Amount</label>
+                <input asp-for="CoverageAmount" class="form-control" readonly />
+            </div>
 
-        <div class="mb-3">
-            <label>Policy Details</label>
-            <input asp-for="PolicyDetails" class="form-control" />
-        </div>
+            <div class="mb-3">
+                <label>Age</label>
+                <input asp-for="Age" class="form-control" readonly />
+            </div>
 
-        <div class="mb-3">
-            <label>Premium</label>
-            <input asp-for="Premium" class="form-control" readonly />
-        </div>
+            <div class="mb-3">
+                <label>Duration</label>
+                <input asp-for="MaturityPeriod" class="form-control" readonly />
+            </div>
 
-        <div class="mb-3">
-            <label>Maturity Period (Years)</label>
-            <input asp-for="MaturityPeriod" class="form-control" readonly />
-        </div>
+            <div class="mb-3">
+                <label>Premium</label>
+                <input asp-for="Premium" class="form-control" readonly style="color:#059669;font-weight:600;" />
+            </div>
 
-        <button type="submit" class="btn btn-success">Confirm Purchase</button>
-        <a asp-action="AvailablePolicies" class="btn btn-secondary">Cancel</a>
+            <div class="mb-3">
+                <label>Policy Summary</label>
+                <textarea class="form-control" rows="3" readonly>
+Coverage Amount: ₹@Model.CoverageAmount | Premium: ₹@Model.Premium | Duration: @Model.MaturityPeriod years
+    </textarea>
+            </div>
 
-    </form>
-
+            <button type="submit" class="btn btn-success w-100">
+                Confirm Purchase
+            </button>
+        </form>
+    </div>
 </div>
 
 @section Scripts {

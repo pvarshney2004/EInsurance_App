@@ -1,36 +1,88 @@
-﻿@model EInsurance_App.ViewModels.PremiumCalculatorVM
+@model EInsurance_App.ViewModels.PremiumCalculatorVM
 
-<div class="container mt-4">
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-calculator"></i></div>
+    <h2>Premium Calculator</h2>
+</div>
 
-    <h2>Premium Calculator (Agent)</h2>
+<div class="alert alert-info mb-3">
+    <i class="bi bi-clipboard2-data me-1"></i>
+    <strong>Scheme:</strong> @ViewBag.SchemeName
+</div>
 
-    <h5>Scheme: @ViewBag.SchemeName</h5>
+<div class="row g-4">
 
-    <form method="post">
+    <!-- LEFT: FORM -->
+    <div class="col-md-6">
+        <div class="card h-100" style="border-radius:14px;border:none;box-shadow:0 4px 20px rgba(15,31,61,0.09);">
+            <div class="card-body p-4">
 
-        <input type="hidden" asp-for="SchemeID" />
+                <form method="post">
+                    <input type="hidden" asp-for="SchemeID" />
 
-        <div class="mb-3">
-            <label>Age</label>
-            <input asp-for="Age" class="form-control" required />
+                    <div class="mb-3">
+                        <label>Coverage Amount</label>
+                        <input asp-for="CoverageAmount" class="form-control" placeholder="e.g. 500000" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Age</label>
+                        <input asp-for="Age" class="form-control" placeholder="e.g. 30" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label>Duration (Years)</label>
+                        <input asp-for="Duration" class="form-control" placeholder="e.g. 10" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-calculator me-1"></i>Calculate
+                    </button>
+                </form>
+
+            </div>
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label>Duration (Years)</label>
-            <input asp-for="Duration" class="form-control" required />
+    <!-- RIGHT: RESULT -->
+    <div class="col-md-6">
+        <div class="card h-100" style="border-radius:14px;border:none;box-shadow:0 4px 20px rgba(15,31,61,0.09);">
+            <div class="card-body p-4 d-flex flex-column justify-content-center">
+
+                @if (Model != null && Model.CalculatedPremium > 0)
+                {
+                    <div class="text-center">
+
+                        <p class="text-muted small mb-2">Policy Summary</p>
+
+                        <div class="mb-3 small fw-semibold">
+                            Coverage: ₹@Model.CoverageAmount <br />
+                            Age: @Model.Age <br />
+                            Duration: @Model.Duration years
+                        </div>
+
+                        <hr />
+
+                        <h5 class="text-muted">Estimated Premium</h5>
+                        <h2 class="fw-bold" style="color:#059669;">
+                            ₹@Model.CalculatedPremium
+                        </h2>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-muted">
+                        <i class="bi bi-info-circle" style="font-size:2rem;"></i>
+                        <p class="mt-2 small">
+                            Enter details and click <strong>Calculate</strong><br />
+                            to see premium here.
+                        </p>
+                    </div>
+                }
+
+            </div>
         </div>
-
-        <button type="submit" class="btn btn-primary">
-            Calculate
-        </button>
-
-    </form>
-
-    @if (Model != null && Model.CalculatedPremium > 0)
-    {
-        <div class="alert alert-success mt-3">
-            <strong>Calculated Premium:</strong> ₹@Model.CalculatedPremium
-        </div>
-    }
+    </div>
 
 </div>

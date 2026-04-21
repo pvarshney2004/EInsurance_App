@@ -1,45 +1,66 @@
-﻿@model List<EInsurance_App.Models.InsuranceAgent>
+@using EInsurance_App.ViewModels.Common
+@model PagedResult<EInsurance_App.Models.InsuranceAgent>
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-person-badge"></i></div>
     <h2>All Agents</h2>
+</div>
 
-    <a asp-action="CreateAgent" class="btn btn-primary mb-3">Add Agent</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a asp-action="CreateAgent" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Agent</a>
+</div>
 
-    @if (Model.Any())
-    {
-        <table class="table table-bordered">
-            <thead class="table-dark">
+@if (Model != null && Model.Data.Any())
+{
+    <div class="ei-table table-responsive">
+        <table class="table mb-0">
+            <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Full Name</th>
-                    <th>Actions</th>
+                    <th>ID</th><th>Username</th><th>Email</th><th>Full Name</th><th>Actions</th>
                 </tr>
             </thead>
-
             <tbody>
-                @foreach (var a in Model)
+                @foreach (var a in Model.Data)
                 {
                     <tr>
-                        <td>@a.AgentID</td>
+                        <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">#@a.AgentID</span></td>
                         <td>@a.Username</td>
                         <td>@a.Email</td>
-                        <td>@a.FullName</td>
+                        <td><strong>@a.FullName</strong></td>
                         <td>
-                            <a asp-action="EditAgent" asp-route-id="@a.AgentID" class="btn btn-warning btn-sm">Edit</a>
+                            <a asp-action="EditAgent" asp-route-id="@a.AgentID" class="btn btn-warning btn-sm me-1">
+                                <i class="bi bi-pencil me-1"></i>Edit
+                            </a>
                             <a asp-action="DeleteAgent" asp-route-id="@a.AgentID" class="btn btn-danger btn-sm"
-                               onclick="return confirm('Delete this agent?');">Delete</a>
+                               onclick="return confirm('Delete this agent?');">
+                                <i class="bi bi-trash me-1"></i>Delete
+                            </a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-    else
-    {
-        <div class="alert alert-info">No agents found.</div>
-    }
+    </div>
 
-</div>
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Agents" asp-route-page="@(Model.PageNumber - 1)">&#171; Prev</a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-action="Agents" asp-route-page="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Agents" asp-route-page="@(Model.PageNumber + 1)">Next &#187;</a>
+            </li>
+        </ul>
+    </nav>
+    <p class="text-center text-muted small">Page <strong>@Model.PageNumber</strong> of <strong>@Model.TotalPages</strong> &mdash; Total: <strong>@Model.TotalRecords</strong></p>
+}
+else
+{
+    <div class="alert alert-info text-center"><i class="bi bi-info-circle me-1"></i>No agents found.</div>
+}

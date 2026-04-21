@@ -5,6 +5,7 @@ using EInsurance_App.ViewModels;
 using EInsurance_App.ViewModels.Payment;
 using EInsurance_App.ViewModels.Policy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using QuestPDF.Fluent;
 
 namespace EInsurance_App.Controllers
@@ -62,22 +63,32 @@ namespace EInsurance_App.Controllers
 
             // Fetching policies + payments
             var policies = _context.Policies
-                .Where(p => p.CustomerID == customer.CustomerID)
-                .Select(p => new PolicyVM
-                {
-                    PolicyID = p.PolicyID,
-                    Premium = p.Premium,
-                    DateIssued = p.DateIssued,
-                    SchemeName = p.Scheme.SchemeName,
+    .Include(p => p.Scheme)
+    .Include(p => p.Payments)
+    .Where(p => p.CustomerID == customer.CustomerID)
+    .AsEnumerable()
+    .Select(p => new PolicyVM
+    {
+        PolicyID = p.PolicyID,
+        Premium = p.Premium,
+        DateIssued = p.DateIssued,
 
-                    Payments = p.Payments.Select(pay => new PaymentVM
-                    {
-                        PaymentID = pay.PaymentID,
-                        Amount = pay.Amount,
-                        PaymentDate = pay.PaymentDate
-                    }).ToList(),
-                    RemainingAmount = p.Premium - p.Payments.Sum(pay => (decimal?)pay.Amount ?? 0)
-                }).ToList();
+        SchemeName = p.Scheme?.SchemeName ?? "N/A",
+
+        CoverageAmountDisplay = p.PolicyDetails
+            .Split('|')[0]
+            .Trim(),
+
+        Payments = p.Payments.Select(pay => new PaymentVM
+        {
+            PaymentID = pay.PaymentID,
+            Amount = pay.Amount,
+            PaymentDate = pay.PaymentDate
+        }).ToList(),
+
+        RemainingAmount = p.Premium - p.Payments.Sum(pay => pay.Amount)
+    })
+    .ToList();
 
             var vm = new CustomerPolicyVM
             {
@@ -109,7 +120,7 @@ namespace EInsurance_App.Controllers
         }
 
         // buy policy
-        public IActionResult BuyPolicy(int schemeId, decimal premium, int duration)
+        public IActionResult BuyPolicy(int schemeId, decimal premium, int duration, decimal coverage, int age)
         {
             var auth = AuthorizeRole("Customer");
             if (auth != null) return auth;
@@ -121,7 +132,9 @@ namespace EInsurance_App.Controllers
             {
                 SchemeID = schemeId,
                 Premium = premium,
-                MaturityPeriod = duration
+                MaturityPeriod = duration,
+                CoverageAmount = coverage,
+                Age = age
             };
 
             ViewBag.SchemeName = scheme.SchemeName;
@@ -133,6 +146,8 @@ namespace EInsurance_App.Controllers
         {
             var auth = AuthorizeRole("Customer");
             if (auth != null) return auth;
+
+            ModelState.Remove("PolicyDetails");
 
             if (!ModelState.IsValid)
             {
@@ -152,12 +167,16 @@ namespace EInsurance_App.Controllers
                 return RedirectToAction("Login", "Account");
 
             var today = DateTime.Now;
+            var finalPolicyDetails =
+        $"Coverage Amount: ₹{model.CoverageAmount} | " +
+        $"Premium: ₹{model.Premium} | " +
+        $"Duration: {model.MaturityPeriod} years";
 
             var policy = new Policy
             {
                 CustomerID = customer.CustomerID,
                 SchemeID = model.SchemeID,
-                PolicyDetails = model.PolicyDetails,
+                PolicyDetails = finalPolicyDetails,
                 Premium = model.Premium,
                 DateIssued = today,
                 MaturityPeriod = model.MaturityPeriod,
@@ -272,20 +291,22 @@ namespace EInsurance_App.Controllers
             var scheme = _context.Schemes.Find(model.SchemeID);
             if (scheme == null) return NotFound();
 
-            decimal baseAmount = 5000;
-            decimal ageFactor = 100;
-            decimal interestRate = 200;
+            decimal baseRate = 0.02m; // 2% of coverage
+            decimal ageFactor = model.Age * 50;
+            decimal durationFactor = model.Duration * 100;
 
             var premium =
-                baseAmount +
-                (model.Age * ageFactor) +
-                (model.Duration * interestRate);
+                (model.CoverageAmount * baseRate) +
+                ageFactor +
+                durationFactor;
 
             return RedirectToAction("BuyPolicy", new
             {
                 schemeId = model.SchemeID,
                 premium = premium,
-                duration = model.Duration
+                duration = model.Duration,
+                coverage = model.CoverageAmount,
+                age = model.Age
             });
         }
 

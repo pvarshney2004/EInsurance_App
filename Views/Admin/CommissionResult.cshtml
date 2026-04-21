@@ -1,50 +1,61 @@
-﻿@model List<EInsurance_App.Models.Policy>
+@model List<EInsurance_App.Models.Policy>
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-cash-coin"></i></div>
     <h2>Commission Details</h2>
+</div>
 
-    <div class="alert alert-info">
-        <strong>Agent:</strong> @ViewBag.AgentName <br />
-        <strong>Total Policies:</strong> @ViewBag.TotalPolicies <br />
-        <strong>Total Commission:</strong> ₹@ViewBag.TotalCommission
-    </div>
-
-    @if (!Model.Any())
-    {
-        <!-- Empty State -->
-        <div class="alert alert-warning text-center mt-4">
-            <h5>No policies found for this agent</h5>
-            <p>This agent has not sold any policies yet.</p>
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card ei-stat-card text-center">
+            <div class="card-body py-3">
+                <p class="text-muted small mb-1">Agent</p>
+                <h6 class="fw-bold" style="color:#0f1f3d;">@ViewBag.AgentName</h6>
+            </div>
         </div>
-    }
-    else
-    {
-        <!-- Table -->
-        <table class="table table-bordered mt-3">
-            <thead class="table-dark">
-                <tr>
-                    <th>Policy ID</th>
-                    <th>Customer ID</th>
-                    <th>Premium</th>
-                    <th>Commission (10%)</th>
-                </tr>
-            </thead>
+    </div>
+    <div class="col-md-4">
+        <div class="card" style="border-left:4px solid #10b981;" >
+            <div class="card-body text-center py-3">
+                <p class="text-muted small mb-1">Total Policies</p>
+                <h3 class="fw-bold" style="color:#059669;">@ViewBag.TotalPolicies</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card" style="border-left:4px solid #f59e0b;">
+            <div class="card-body text-center py-3">
+                <p class="text-muted small mb-1">Total Commission</p>
+                <h3 class="fw-bold" style="color:#d97706;">&#8377;@ViewBag.TotalCommission</h3>
+            </div>
+        </div>
+    </div>
+</div>
 
+@if (!Model.Any())
+{
+    <div class="alert alert-warning text-center">
+        <i class="bi bi-exclamation-circle me-1"></i>No policies found for this agent.
+    </div>
+}
+else
+{
+    <div class="ei-table table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr><th>Policy ID</th><th>Customer ID</th><th>Premium</th><th>Commission (10%)</th></tr>
+            </thead>
             <tbody>
                 @foreach (var p in Model)
                 {
                     <tr>
-                        <td>@p.PolicyID</td>
+                        <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">#@p.PolicyID</span></td>
                         <td>@p.CustomerID</td>
-                        <td>₹@p.Premium</td>
-                        <td class="text-success fw-bold">
-                            ₹@(p.Premium * 0.10m)
-                        </td>
+                        <td>&#8377;@p.Premium</td>
+                        <td><span class="fw-bold" style="color:#059669;">&#8377;@(p.Premium * 0.10m)</span></td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-
-</div>
+    </div>
+}

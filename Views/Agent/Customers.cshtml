@@ -1,57 +1,42 @@
-﻿@model List<EInsurance_App.ViewModels.Agent.CustomerListVM>
+@model List<EInsurance_App.ViewModels.Agent.CustomerListVM>
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-people"></i></div>
     <h2>My Customers</h2>
+</div>
 
-    <div class="alert alert-info">
-        <strong>Agent:</strong> @ViewBag.AgentName
-    </div>
+<div class="alert alert-info mb-3">
+    <i class="bi bi-person-badge me-1"></i><strong>Agent:</strong> @ViewBag.AgentName
+</div>
 
-    @if (!Model.Any())
-    {
-        <div class="alert alert-warning text-center">
-            <h5>No customers assigned</h5>
-            <p>You don’t have any customers yet.</p>
-        </div>
-    }
-    else
-    {
-        <table class="table table-bordered table-hover mt-3">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Policies</th>
-                    <th>Action</th>
-                </tr>
+@if (!Model.Any())
+{
+    <div class="alert alert-warning text-center"><i class="bi bi-exclamation-circle me-1"></i>No customers assigned yet.</div>
+}
+else
+{
+    <div class="ei-table table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Policies</th><th>Action</th></tr>
             </thead>
-
             <tbody>
                 @foreach (var c in Model)
                 {
                     <tr>
-                        <td>@c.CustomerID</td>
-                        <td>@c.FullName</td>
+                        <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">#@c.CustomerID</span></td>
+                        <td><strong>@c.FullName</strong></td>
                         <td>@c.Email</td>
                         <td>@c.Phone</td>
+                        <td><span class="badge bg-success">@c.PolicyCount</span></td>
                         <td>
-                            <span class="badge bg-success">@c.PolicyCount</span>
-                        </td>
-                        <td>
-                            <a asp-controller="Agent"
-                                   asp-action="CustomerPolicies"
-                                   asp-route-customerId="@c.CustomerID"
-                                   class="btn btn-sm btn-primary">
-                                View Policies
+                            <a asp-controller="Agent" asp-action="CustomerPolicies" asp-route-customerId="@c.CustomerID" class="btn btn-primary btn-sm">
+                                <i class="bi bi-eye me-1"></i>Policies
                             </a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-
-</div>
+    </div>
+}

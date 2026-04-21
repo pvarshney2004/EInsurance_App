@@ -1,28 +1,25 @@
-﻿@model List<EInsurance_App.Models.InsuranceAgent>
+@model List<EInsurance_App.Models.InsuranceAgent>
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-calculator"></i></div>
     <h2>Commission Calculator</h2>
+</div>
 
-    <form method="post">
-
-        <div class="mb-3">
-            <label>Select Agent</label>
-
-            <select name="agentId" class="form-control">
-                @foreach (var a in Model)
-                {
-                    <option value="@a.AgentID">
-                        @a.FullName (@a.Email)
-                    </option>
-                }
-            </select>
-        </div>
-
-        <button class="btn btn-primary">
-            Calculate Commission
-        </button>
-
-    </form>
-
+<div class="card" style="max-width:520px;border-radius:14px;border:none;box-shadow:0 4px 20px rgba(15,31,61,0.09);">
+    <div class="card-body p-4">
+        <form method="post">
+            <div class="mb-4">
+                <label class="form-label">Select Agent</label>
+                <select name="agentId" class="form-select">
+                    @foreach (var a in Model)
+                    {
+                        <option value="@a.AgentID">@a.FullName (@a.Email)</option>
+                    }
+                </select>
+            </div>
+            <button class="btn btn-primary w-100">
+                <i class="bi bi-calculator me-1"></i>Calculate Commission
+            </button>
+        </form>
+    </div>
 </div>

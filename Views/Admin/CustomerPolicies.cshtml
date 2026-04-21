@@ -1,33 +1,101 @@
-﻿@using EInsurance_App.ViewModels.Policy
-@model CustomerPolicyVM
+@using EInsurance_App.ViewModels.Common
+@using EInsurance_App.ViewModels.Policy
+@model PagedResult<PolicyVM>
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-search"></i></div>
     <h2>Search Customer Policies</h2>
+</div>
 
-    <form method="get">
-        <input name="email" class="form-control" placeholder="Enter customer email" />
-        <button class="btn btn-primary mt-2">Search</button>
-    </form>
+<div class="card mb-4" style="border-radius:12px;border:none;box-shadow:0 2px 12px rgba(15,31,61,0.07);">
+    <div class="card-body p-3">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-7">
+                <label class="form-label">Customer Email</label>
+                <input name="email" value="@ViewBag.Email" class="form-control" placeholder="Enter customer email..." />
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary w-100"><i class="bi bi-search me-1"></i>Search</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-    @if (ViewBag.Error != null)
-    {
-        <p class="text-danger">@ViewBag.Error</p>
-    }
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>@ViewBag.Error</div>
+}
 
-    @if (Model != null)
-    {
-        <h3>@Model.CustomerName</h3>
+@if (Model != null && Model.Data.Any())
+{
+    <div class="alert alert-info mb-3">
+        <i class="bi bi-person-circle me-1"></i><strong>Customer:</strong> @ViewBag.CustomerName
+    </div>
 
-        @foreach (var policy in Model.Policies)
+    <div class="row g-3">
+        @foreach (var policy in Model.Data)
         {
-            <div class="card mt-3">
-                <div class="card-body">
-                    <p><strong>Policy ID:</strong> @policy.PolicyID</p>
-                    <p><strong>Scheme:</strong> @policy.SchemeName</p>
-                    <p><strong>Premium:</strong> ₹@policy.Premium</p>
+            <div class="col-md-6">
+                <div class="card" style="border-left:4px solid #0284c7;">
+                    <div class="card-body">
+
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="badge" style="background:#e0f2fe;color:#0369a1;">
+                                Policy #@policy.PolicyID
+                            </span>
+                        </div>
+
+                        <!-- Scheme -->
+                        <p class="mb-1">
+                            <strong>Scheme:</strong> @policy.SchemeName
+                        </p>
+
+                        <!-- Coverage -->
+                        <p class="mb-1">
+                            <span class="badge px-3 py-2" style="background:#ecfdf5;color:#065f46;">
+                                @policy.CoverageAmountDisplay
+                            </span>
+                        </p>
+
+                        <!-- Premium -->
+                        <p class="mb-1">
+                            <strong>Premium:</strong>
+                            <span style="color:#059669;font-weight:600;">
+                                &#8377;@policy.Premium
+                            </span>
+                        </p>
+
+                        <!-- Issued Date -->
+                        <p class="mb-0 text-muted small">
+                            Issued on: @policy.DateIssued.ToString("dd MMM yyyy")
+                        </p>
+
+                    </div>
                 </div>
             </div>
         }
-    }
-</div>
+    </div>
+
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" asp-route-email="@ViewBag.Email" asp-route-page="@(Model.PageNumber - 1)">Prev</a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-route-email="@ViewBag.Email" asp-route-page="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-route-email="@ViewBag.Email" asp-route-page="@(Model.PageNumber + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <p class="text-center text-muted small">Page @Model.PageNumber of @Model.TotalPages</p>
+}
+else
+{
+    <div class="alert alert-info text-center"><i class="bi bi-info-circle me-1"></i>No policies found.</div>
+}

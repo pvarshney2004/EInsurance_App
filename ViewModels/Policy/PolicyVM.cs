@@ -9,6 +9,7 @@ namespace EInsurance_App.ViewModels.Policy
         public decimal Premium { get; set; }
         public DateTime DateIssued { get; set; }
         public decimal RemainingAmount { get; set; }
+        public string CoverageAmountDisplay { get; set; }
 
         public List<PaymentVM> Payments { get; set; }
     }

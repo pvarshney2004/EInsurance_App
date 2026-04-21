@@ -6,13 +6,12 @@ namespace EInsurance_App.ViewModels.Policy
     {
         public int SchemeID { get; set; }
 
-        [Required]
         public string PolicyDetails { get; set; }
 
-        [Required]
         public decimal Premium { get; set; }
-
-        [Required]
         public int MaturityPeriod { get; set; }
+
+        public decimal CoverageAmount { get; set; }
+        public int Age { get; set; }
     }
 }

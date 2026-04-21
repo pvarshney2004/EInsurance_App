@@ -1,40 +1,56 @@
-﻿@model List<EInsurance_App.Models.Scheme>
+@using EInsurance_App.ViewModels.Common
+@model PagedResult<EInsurance_App.Models.Scheme>
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-list-check"></i></div>
     <h2>Schemes</h2>
+</div>
 
-    <a asp-action="CreateScheme" asp-route-planId="@ViewBag.PlanId"
-           class="btn btn-primary mb-3">
-        Add Scheme
+<div class="mb-3">
+    <a asp-action="CreateScheme" asp-route-planId="@ViewBag.PlanId" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>Add Scheme
     </a>
+</div>
 
-    @if (Model.Any())
-    {
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Details</th>
-                </tr>
+@if (Model != null && Model.Data.Any())
+{
+    <div class="ei-table table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Details</th></tr>
             </thead>
-
             <tbody>
-                @foreach (var s in Model)
+                @foreach (var s in Model.Data)
                 {
                     <tr>
-                        <td>@s.SchemeID</td>
-                        <td>@s.SchemeName</td>
-                        <td>@s.SchemeDetails</td>
+                        <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">#@s.SchemeID</span></td>
+                        <td><strong>@s.SchemeName</strong></td>
+                        <td class="text-muted">@s.SchemeDetails</td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-    else
-    {
-        <div class="alert alert-info">No schemes found.</div>
-    }
+    </div>
 
-</div>
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" asp-route-planId="@ViewBag.PlanId" asp-route-page="@(Model.PageNumber - 1)">Prev</a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-route-planId="@ViewBag.PlanId" asp-route-page="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-route-planId="@ViewBag.PlanId" asp-route-page="@(Model.PageNumber + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <p class="text-center text-muted small">Page @Model.PageNumber of @Model.TotalPages</p>
+}
+else
+{
+    <div class="alert alert-info text-center"><i class="bi bi-info-circle me-1"></i>No schemes found.</div>
+}

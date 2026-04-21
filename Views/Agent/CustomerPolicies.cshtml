@@ -1,39 +1,32 @@
-﻿@model List<EInsurance_App.ViewModels.Agent.CustomerPolicyVM>
+@model List<EInsurance_App.ViewModels.Agent.CustomerPolicyVM>
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-file-earmark-text"></i></div>
     <h2>Customer Policies</h2>
+</div>
 
-    @if (!Model.Any())
-    {
-        <div class="alert alert-warning text-center">
-            No policies found for this customer
-        </div>
-    }
-    else
-    {
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Policy ID</th>
-                    <th>Scheme</th>
-                    <th>Premium</th>
-                    <th>Issued Date</th>
-                </tr>
+@if (!Model.Any())
+{
+    <div class="alert alert-warning text-center"><i class="bi bi-exclamation-circle me-1"></i>No policies found for this customer.</div>
+}
+else
+{
+    <div class="ei-table table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr><th>Policy ID</th><th>Scheme</th><th>Premium</th><th>Issued Date</th></tr>
             </thead>
-
             <tbody>
                 @foreach (var p in Model)
                 {
                     <tr>
-                        <td>@p.PolicyID</td>
-                        <td>@p.SchemeName</td>
-                        <td>₹@p.Premium</td>
+                        <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">#@p.PolicyID</span></td>
+                        <td><strong>@p.SchemeName</strong></td>
+                        <td><span style="color:#059669;font-weight:600;">&#8377;@p.Premium</span></td>
                         <td>@p.DateIssued.ToString("dd MMM yyyy")</td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-
-</div>
+    </div>
+}

@@ -1,97 +1,81 @@
-﻿<div class="container mt-4">
+<div class="ei-welcome">
+    <div class="d-flex align-items-center gap-3">
+        <div style="width:52px;height:52px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">
+            <i class="bi bi-shield-shaded"></i>
+        </div>
+        <div>
+            <h3 class="mb-0 fw-bold">Admin Dashboard</h3>
+            <p class="mb-0 mt-1" style="opacity:0.7;font-size:0.9rem;">Manage your EInsurance platform</p>
+        </div>
+    </div>
+</div>
 
-	<h2 class="text-center mb-4">Admin Dashboard</h2>
+<div class="row g-4">
 
-	<div class="row">
+    <div class="col-md-4">
+        <div class="card ei-action-card h-100">
+            <div class="card-body p-4">
+                <div class="card-icon icon-blue"><i class="bi bi-file-earmark-text"></i></div>
+                <h5 class="fw-600" style="font-weight:600;color:#0f1f3d;">Customer Policies</h5>
+                <p class="text-muted small mb-3">View policies of any customer</p>
+                <a asp-controller="Admin" asp-action="CustomerPolicies" class="btn btn-primary btn-sm px-4">Open</a>
+            </div>
+        </div>
+    </div>
 
-		<!-- Customer Policies -->
-		<div class="col-md-4 mb-4">
-			<div class="card shadow h-100 text-center">
-				<div class="card-body">
-					<h5 class="card-title">Customer Policies</h5>
-					<p class="card-text">View policies of any customer</p>
+    <div class="col-md-4">
+        <div class="card ei-action-card h-100">
+            <div class="card-body p-4">
+                <div class="card-icon icon-green"><i class="bi bi-people"></i></div>
+                <h5 style="font-weight:600;color:#0f1f3d;">Manage Customers</h5>
+                <p class="text-muted small mb-3">View, edit and delete customers</p>
+                <a asp-controller="Admin" asp-action="Customers" class="btn btn-success btn-sm px-4">Open</a>
+            </div>
+        </div>
+    </div>
 
-					<a asp-controller="Admin" asp-action="CustomerPolicies"
-						   class="btn btn-primary">
-						Go
-					</a>
-				</div>
-			</div>
-		</div>
+    <div class="col-md-4">
+        <div class="card ei-action-card h-100">
+            <div class="card-body p-4">
+                <div class="card-icon icon-amber"><i class="bi bi-person-badge"></i></div>
+                <h5 style="font-weight:600;color:#0f1f3d;">Manage Agents</h5>
+                <p class="text-muted small mb-3">Create, update and manage agents</p>
+                <a asp-controller="Admin" asp-action="Agents" class="btn btn-warning btn-sm px-4">Open</a>
+            </div>
+        </div>
+    </div>
 
-		<!-- Manage Customers -->
-		<div class="col-md-4 mb-4">
-			<div class="card shadow h-100 text-center">
-				<div class="card-body">
-					<h5 class="card-title">Manage Customers</h5>
-					<p class="card-text">View, edit and delete customers</p>
+    <div class="col-md-4">
+        <div class="card ei-action-card h-100">
+            <div class="card-body p-4">
+                <div class="card-icon icon-purple"><i class="bi bi-briefcase"></i></div>
+                <h5 style="font-weight:600;color:#0f1f3d;">Manage Employees</h5>
+                <p class="text-muted small mb-3">Handle employee records</p>
+                <a asp-controller="Admin" asp-action="Employees" class="btn btn-dark btn-sm px-4">Open</a>
+            </div>
+        </div>
+    </div>
 
-					<a asp-controller="Admin" asp-action="Customers"
-						   class="btn btn-success">
-						Go
-					</a>
-				</div>
-			</div>
-		</div>
+    <div class="col-md-4">
+        <div class="card ei-action-card h-100">
+            <div class="card-body p-4">
+                <div class="card-icon icon-teal"><i class="bi bi-clipboard2-data"></i></div>
+                <h5 style="font-weight:600;color:#0f1f3d;">Manage Plans</h5>
+                <p class="text-muted small mb-3">Create and manage plans &amp; schemes</p>
+                <a asp-controller="Admin" asp-action="Plans" class="btn btn-info btn-sm px-4">Open</a>
+            </div>
+        </div>
+    </div>
 
-		<!-- Manage Agents -->
-		<div class="col-md-4 mb-4">
-			<div class="card shadow h-100 text-center">
-				<div class="card-body">
-					<h5 class="card-title">Manage Agents</h5>
-					<p class="card-text">Create, update and manage agents</p>
-
-					<a asp-controller="Admin" asp-action="Agents"
-						   class="btn btn-warning">
-						Go
-					</a>
-				</div>
-			</div>
-		</div>
-
-		<!-- Manage Employees -->
-		<div class="col-md-4 mb-4">
-			<div class="card shadow h-100 text-center">
-				<div class="card-body">
-					<h5 class="card-title">Manage Employees</h5>
-					<p class="card-text">Handle employee records</p>
-
-					<a asp-controller="Admin" asp-action="Employees"
-						   class="btn btn-dark">
-						Go
-					</a>
-				</div>
-			</div>
-		</div>
-
-		<!-- Manage Plans -->
-		<div class="col-md-4 mb-4">
-			<div class="card shadow h-100 text-center">
-				<div class="card-body">
-					<h5 class="card-title">Manage Plans</h5>
-					<p class="card-text">Create and manage plans & schemes</p>
-					<a asp-controller="Admin" asp-action="Plans"
-						   class="btn btn-info">
-						Go
-					</a>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-4 mb-4">
-			<div class="card shadow h-100 text-center">
-				<div class="card-body">
-					<h5 class="card-title">Commission Calculator</h5>
-					<p class="card-text">Calculate agent commissions</p>
-
-					<a asp-controller="Admin" asp-action="CommissionCalculator"
-						   class="btn btn-info">
-						Go
-					</a>
-				</div>
-			</div>
-		</div>
-
-	</div>
+    <div class="col-md-4">
+        <div class="card ei-action-card h-100">
+            <div class="card-body p-4">
+                <div class="card-icon icon-rose"><i class="bi bi-calculator"></i></div>
+                <h5 style="font-weight:600;color:#0f1f3d;">Commission Calculator</h5>
+                <p class="text-muted small mb-3">Calculate agent commissions</p>
+                <a asp-controller="Admin" asp-action="CommissionCalculator" class="btn btn-info btn-sm px-4">Open</a>
+            </div>
+        </div>
+    </div>
 
 </div>

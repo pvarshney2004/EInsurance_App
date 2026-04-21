@@ -1,30 +1,30 @@
-﻿@model EInsurance_App.Models.InsurancePlan
+@model EInsurance_App.Models.InsurancePlan
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-clipboard2-plus"></i></div>
     <h2>Create Insurance Plan</h2>
+</div>
 
-    <form asp-action="CreatePlan" method="post">
-
-        <div asp-validation-summary="All" class="text-danger"></div>
-
-        <div class="mb-3">
-            <label>Plan Name</label>
-            <input asp-for="PlanName" class="form-control" placeholder="Enter plan name" />
-            <span asp-validation-for="PlanName" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label>Plan Details</label>
-            <textarea asp-for="PlanDetails" class="form-control" rows="3" placeholder="Enter plan details"></textarea>
-            <span asp-validation-for="PlanDetails" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-success">Create Plan</button>
-        <a asp-action="Plans" class="btn btn-secondary">Cancel</a>
-
-    </form>
-
+<div class="card" style="max-width:560px;border-radius:14px;border:none;box-shadow:0 4px 20px rgba(15,31,61,0.09);">
+    <div class="card-body p-4">
+        <form asp-action="CreatePlan" method="post">
+            <div asp-validation-summary="All" class="text-danger small mb-3"></div>
+            <div class="mb-3">
+                <label>Plan Name</label>
+                <input asp-for="PlanName" class="form-control" placeholder="Enter plan name" />
+                <span asp-validation-for="PlanName" class="text-danger small"></span>
+            </div>
+            <div class="mb-4">
+                <label>Plan Details</label>
+                <textarea asp-for="PlanDetails" class="form-control" rows="3" placeholder="Enter plan details"></textarea>
+                <span asp-validation-for="PlanDetails" class="text-danger small"></span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success"><i class="bi bi-check-lg me-1"></i>Create Plan</button>
+                <a asp-action="Plans" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 @section Scripts {

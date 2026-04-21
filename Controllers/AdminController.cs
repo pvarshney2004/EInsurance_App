@@ -1,5 +1,7 @@
 ﻿using EInsurance_App.Data;
+using EInsurance_App.Helpers;
 using EInsurance_App.Models;
+using EInsurance_App.ViewModels.Common;
 using EInsurance_App.ViewModels.Customer;
 using EInsurance_App.ViewModels.Policy;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +24,7 @@ namespace EInsurance_App.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult CustomerPolicies(string email)
+        public IActionResult CustomerPolicies(string email, int page = 1)
         {
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
@@ -39,58 +41,73 @@ namespace EInsurance_App.Controllers
                 return View();
             }
 
-            var policies = _context.Policies
+            int pageSize = 5;
+
+            var query = _context.Policies
                 .Where(p => p.CustomerID == customer.CustomerID)
+                .Include(p => p.Scheme)     // prevent null error
+                .Include(p => p.Payments)   
+                .AsEnumerable()             // switch to LINQ-to-Objects
                 .Select(p => new PolicyVM
                 {
                     PolicyID = p.PolicyID,
                     Premium = p.Premium,
                     DateIssued = p.DateIssued,
-                    SchemeName = p.Scheme.SchemeName,
+                    SchemeName = p.Scheme?.SchemeName ?? "N/A",
+
+                    // Extracting coverage from PolicyDetails
+                    CoverageAmountDisplay = !string.IsNullOrEmpty(p.PolicyDetails)
+                        ? p.PolicyDetails.Split('|')[0].Trim()
+                        : "N/A",
 
                     Payments = p.Payments.Select(pay => new PaymentVM
                     {
                         Amount = pay.Amount,
                         PaymentDate = pay.PaymentDate
                     }).ToList()
-                }).ToList();
+                })
+                .ToList(); // materialize before paging
 
-            var vm = new CustomerPolicyVM
-            {
-                CustomerName = customer.FullName,
-                Policies = policies
-            };
-            return View(vm);
+            // Apply pagination on in-memory list
+            var result = query.ToPagedResult(page, pageSize);
+
+            ViewBag.CustomerName = customer.FullName;
+            ViewBag.Email = email;
+
+            return View(result);
         }
 
-
-        public IActionResult Customers()
+        public IActionResult Customers(int page = 1)
         {
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
-            var customers = _context.Customers
+            int pageSize = 5;
+
+            var query = _context.Customers
                 .Select(c => new CustomerListVM
                 {
                     CustomerID = c.CustomerID,
                     FullName = c.FullName,
                     Email = c.Email,
                     Phone = c.Phone
-                }).ToList();
+                });
 
-            return View(customers);
+            var result = query.ToPagedResult(page, pageSize);
+
+            return View(result);
         }
 
-        // for customer update
+        [HttpGet]
         public IActionResult EditCustomer(int id)
         {
-            var auth = AuthorizeRole("Admin");
-            if (auth != null) return auth;
-
             var customer = _context.Customers.Find(id);
 
             if (customer == null)
-                return NotFound();
+            {
+                TempData["Error"] = "Customer not found";
+                return RedirectToAction("Customers");
+            }
 
             return View(customer);
         }
@@ -154,14 +171,18 @@ namespace EInsurance_App.Controllers
 
         // for agent CRUD
 
-        public IActionResult Agents()
+        public IActionResult Agents(int page = 1)
         {
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
-            var agents = _context.InsuranceAgents.ToList();
+            int pageSize = 5;
 
-            return View(agents);
+            var query = _context.InsuranceAgents;
+
+            var result = query.ToPagedResult(page, pageSize);
+
+            return View(result);
         }
 
         public IActionResult CreateAgent()
@@ -249,14 +270,18 @@ namespace EInsurance_App.Controllers
 
 
         // for employee CRUD
-        public IActionResult Employees()
+        public IActionResult Employees(int page = 1)
         {
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
-            var employees = _context.Employees.ToList();
+            int pageSize = 5;
 
-            return View(employees);
+            var query = _context.Employees;
+
+            var result = query.ToPagedResult(page, pageSize);
+
+            return View(result);
         }
 
         public IActionResult CreateEmployee()
@@ -342,13 +367,18 @@ namespace EInsurance_App.Controllers
 
 
         // admin adding plan and scheme
-        public IActionResult Plans()
+        public IActionResult Plans(int page = 1)
         {
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
-            var plans = _context.InsurancePlans.ToList();
-            return View(plans);
+            int pageSize = 5;
+
+            var query = _context.InsurancePlans;
+
+            var result = query.ToPagedResult(page, pageSize);
+
+            return View(result);
         }
 
         public IActionResult CreatePlan()
@@ -376,18 +406,21 @@ namespace EInsurance_App.Controllers
             return RedirectToAction("Plans");
         }
 
-        public IActionResult SchemesByPlan(int planId)
+        public IActionResult SchemesByPlan(int planId, int page = 1)
         {
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
-            var schemes = _context.Schemes
-                .Where(s => s.PlanID == planId)
-                .ToList();
+            int pageSize = 5;
+
+            var query = _context.Schemes
+                .Where(s => s.PlanID == planId);
+
+            var result = query.ToPagedResult(page, pageSize);
 
             ViewBag.PlanId = planId;
 
-            return View(schemes);
+            return View(result);
         }
 
         public IActionResult CreateScheme(int planId)

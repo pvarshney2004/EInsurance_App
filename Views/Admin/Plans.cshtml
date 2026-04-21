@@ -1,50 +1,62 @@
-﻿@model List<EInsurance_App.Models.InsurancePlan>
+@using EInsurance_App.ViewModels.Common
+@model PagedResult<EInsurance_App.Models.InsurancePlan>
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-clipboard2-data"></i></div>
     <h2>Insurance Plans</h2>
+</div>
 
-    <a asp-action="CreatePlan" class="btn btn-primary mb-3">Add Plan</a>
+<div class="mb-3">
+    <a asp-action="CreatePlan" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Plan</a>
+</div>
 
-    @if (Model.Any())
-    {
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Details</th>
-                    <th>Actions</th>
-                </tr>
+@if (Model != null && Model.Data.Any())
+{
+    <div class="ei-table table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Details</th><th>Actions</th></tr>
             </thead>
-
             <tbody>
-                @foreach (var p in Model)
+                @foreach (var p in Model.Data)
                 {
                     <tr>
-                        <td>@p.PlanID</td>
-                        <td>@p.PlanName</td>
-                        <td>@p.PlanDetails</td>
+                        <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">#@p.PlanID</span></td>
+                        <td><strong>@p.PlanName</strong></td>
+                        <td class="text-muted">@p.PlanDetails</td>
                         <td>
-                            <!-- 🔥 KEY FEATURE -->
-                            <a asp-action="SchemesByPlan" asp-route-planId="@p.PlanID"
-                                   class="btn btn-info btn-sm">
-                                View Schemes
+                            <a asp-action="SchemesByPlan" asp-route-planId="@p.PlanID" class="btn btn-info btn-sm me-1">
+                                <i class="bi bi-list-ul me-1"></i>Schemes
                             </a>
-
-                            <a asp-action="CreateScheme" asp-route-planId="@p.PlanID"
-                                   class="btn btn-success btn-sm">
-                                Add Scheme
+                            <a asp-action="CreateScheme" asp-route-planId="@p.PlanID" class="btn btn-success btn-sm">
+                                <i class="bi bi-plus me-1"></i>Add Scheme
                             </a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-    else
-    {
-        <div class="alert alert-info">No plans found.</div>
-    }
+    </div>
 
-</div>
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" asp-route-page="@(Model.PageNumber - 1)">Prev</a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-route-page="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-route-page="@(Model.PageNumber + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <p class="text-center text-muted small">Page @Model.PageNumber of @Model.TotalPages</p>
+}
+else
+{
+    <div class="alert alert-info text-center"><i class="bi bi-info-circle me-1"></i>No plans found.</div>
+}

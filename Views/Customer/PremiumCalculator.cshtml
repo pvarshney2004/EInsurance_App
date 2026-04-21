@@ -1,29 +1,37 @@
-﻿@model EInsurance_App.ViewModels.PremiumCalculatorVM
+@model EInsurance_App.ViewModels.PremiumCalculatorVM
 
-<div class="container mt-4">
-
+<div class="ei-page-header">
+    <div class="header-icon"><i class="bi bi-calculator"></i></div>
     <h2>Premium Calculator</h2>
+</div>
 
-    <h5>Scheme: @ViewBag.SchemeName</h5>
+<div class="alert alert-info mb-3">
+    <i class="bi bi-clipboard2-data me-1"></i><strong>Scheme:</strong> @ViewBag.SchemeName
+</div>
 
-    <form method="post">
+<div class="card" style="max-width:480px;border-radius:14px;border:none;box-shadow:0 4px 20px rgba(15,31,61,0.09);">
+    <div class="card-body p-4">
+        <form method="post">
+            <input type="hidden" asp-for="SchemeID" />
 
-        <input type="hidden" asp-for="SchemeID" />
+            <div class="mb-3">
+                <label>Coverage Amount</label>
+                <input asp-for="CoverageAmount" class="form-control" placeholder="e.g. 500000" required />
+            </div>
 
-        <div class="mb-3">
-            <label>Age</label>
-            <input asp-for="Age" class="form-control" required />
-        </div>
+            <div class="mb-3">
+                <label>Age</label>
+                <input asp-for="Age" class="form-control" placeholder="e.g. 30" required />
+            </div>
 
-        <div class="mb-3">
-            <label>Duration (Years)</label>
-            <input asp-for="Duration" class="form-control" required />
-        </div>
+            <div class="mb-4">
+                <label>Duration (Years)</label>
+                <input asp-for="Duration" class="form-control" placeholder="e.g. 10" required />
+            </div>
 
-        <button type="submit" class="btn btn-primary">
-            Calculate & Continue
-        </button>
-
-    </form>
-
+            <button type="submit" class="btn btn-primary w-100">
+                Calculate & Continue →
+            </button>
+        </form>
+    </div>
 </div>
