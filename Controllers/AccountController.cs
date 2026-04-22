@@ -21,11 +21,26 @@ namespace EInsurance_App.Controllers
         }
         public IActionResult Register()
         {
+            var role = HttpContext.Session.GetString("Role");
+
+            // If already logged in -> don't allow register page
+            if (!string.IsNullOrEmpty(role))
+            {
+                return RedirectToAction("RedirectDashboard");
+            }
             return View();
         }
 
         public IActionResult Login()
         {
+            var role = HttpContext.Session.GetString("Role");
+
+            // If already logged in -. redirect to dashboard
+            if (!string.IsNullOrEmpty(role))
+            {
+                return RedirectToAction("RedirectDashboard");
+            }
+
             return View();
         }
 
@@ -43,7 +58,7 @@ namespace EInsurance_App.Controllers
 
             if (exists)
             {
-                ModelState.AddModelError("", "Email already registered");
+                ModelState.AddModelError("Email", "Email already registered");
                 return View(registerCustomerVM);
             }
 

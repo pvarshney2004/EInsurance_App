@@ -29,6 +29,8 @@ namespace EInsurance_App.Controllers
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
+            ViewBag.HasSearched = !string.IsNullOrEmpty(email);
+
             if (string.IsNullOrEmpty(email))
                 return View();
 
@@ -37,11 +39,14 @@ namespace EInsurance_App.Controllers
 
             if (customer == null)
             {
+                ViewBag.CustomerFound = false;
                 ViewBag.Error = "Customer not found";
                 return View();
             }
 
-            int pageSize = 5;
+            ViewBag.CustomerFound = true;
+
+            int pageSize = 4;
 
             var query = _context.Policies
                 .Where(p => p.CustomerID == customer.CustomerID)
@@ -82,7 +87,7 @@ namespace EInsurance_App.Controllers
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
-            int pageSize = 5;
+            int pageSize = 4;
 
             var query = _context.Customers
                 .Select(c => new CustomerListVM
@@ -176,7 +181,7 @@ namespace EInsurance_App.Controllers
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
-            int pageSize = 5;
+            int pageSize = 4;
 
             var query = _context.InsuranceAgents;
 
@@ -275,7 +280,7 @@ namespace EInsurance_App.Controllers
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
-            int pageSize = 5;
+            int pageSize = 4;
 
             var query = _context.Employees;
 
@@ -372,7 +377,7 @@ namespace EInsurance_App.Controllers
             var auth = AuthorizeRole("Admin");
             if (auth != null) return auth;
 
-            int pageSize = 5;
+            int pageSize = 4;
 
             var query = _context.InsurancePlans;
 

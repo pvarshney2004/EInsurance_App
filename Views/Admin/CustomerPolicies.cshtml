@@ -21,11 +21,6 @@
     </div>
 </div>
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>@ViewBag.Error</div>
-}
-
 @if (Model != null && Model.Data.Any())
 {
     <div class="alert alert-info mb-3">
@@ -44,6 +39,25 @@
                             <span class="badge" style="background:#e0f2fe;color:#0369a1;">
                                 Policy #@policy.PolicyID
                             </span>
+
+                            <!-- 🔥 Payment Status -->
+                            @{
+                                var totalPaid = policy.Payments?.Sum(p => p.Amount) ?? 0;
+                                var remaining = policy.Premium - totalPaid;
+                            }
+
+                            @if (remaining <= 0)
+                            {
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle me-1"></i>Fully Paid
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge" style="background:#fef3c7;color:#92400e;">
+                                    <i class="bi bi-clock me-1"></i>₹@remaining Pending
+                                </span>
+                            }
                         </div>
 
                         <!-- Scheme -->
@@ -67,9 +81,65 @@
                         </p>
 
                         <!-- Issued Date -->
-                        <p class="mb-0 text-muted small">
+                        <p class="mb-2 text-muted small">
                             Issued on: @policy.DateIssued.ToString("dd MMM yyyy")
                         </p>
+
+                        <!-- COLLAPSIBLE BUTTON -->
+                        <button class="btn btn-sm btn-outline-primary w-100 mt-2"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#payments-@policy.PolicyID">
+                            <i class="bi bi-receipt me-1"></i> View Payments
+                        </button>
+
+                        <!-- COLLAPSIBLE CONTENT -->
+                        <div id="payments-@policy.PolicyID" class="collapse mt-3">
+
+                            <div class="p-3 rounded" style="background:#f8fafc;border:1px solid #e2e8f0;">
+
+                                <!-- Summary -->
+                                <div class="d-flex justify-content-between mb-2">
+                                    <small class="text-muted">Total Paid:</small>
+                                    <strong style="color:#059669;">₹@totalPaid</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <small class="text-muted">Remaining:</small>
+                                    <strong style="color:#dc2626;">₹@remaining</strong>
+                                </div>
+
+                                @if (policy.Payments != null && policy.Payments.Any())
+                                {
+                                    <table class="table table-sm mb-0">
+                                        <thead style="background:#f1f5f9;">
+                                            <tr>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var pay in policy.Payments)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <span class="badge bg-success">
+                                                            ₹@pay.Amount
+                                                        </span>
+                                                    </td>
+                                                    <td>@pay.PaymentDate.ToString("dd MMM yyyy")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <p class="text-muted small mb-0">
+                                        <i class="bi bi-info-circle me-1"></i>No payments yet.
+                                    </p>
+                                }
+
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -95,7 +165,16 @@
     </nav>
     <p class="text-center text-muted small">Page @Model.PageNumber of @Model.TotalPages</p>
 }
-else
+@if (ViewBag.Error != null && ViewBag.CustomerFound == false)
 {
-    <div class="alert alert-info text-center"><i class="bi bi-info-circle me-1"></i>No policies found.</div>
+    <div class="alert alert-danger text-center">
+        <i class="bi bi-exclamation-triangle me-1"></i>@ViewBag.Error
+    </div>
+}
+else if (ViewBag.HasSearched == true && ViewBag.CustomerFound == true && (Model == null || !Model.Data.Any()))
+{
+    <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle me-1"></i>
+        No policies found for this customer.
+    </div>
 }
