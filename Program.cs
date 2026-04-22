@@ -1,4 +1,5 @@
 using EInsurance_App.Data;
+using EInsurance_App.Models;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Infrastructure;
 
@@ -40,6 +41,41 @@ namespace EInsurance_App
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Account}/{action=Login}/{id?}");
+
+            // admin auto seeding 
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                try
+                {
+                    var adminEmail = "admin@gmail.com";
+
+                    if (!context.Admins.Any(a => a.Email == adminEmail))
+                    {
+                        var admin = new Admin
+                        {
+                            Username = "admin",
+                            Email = adminEmail,
+                            Password = "Admin@123",
+                            FullName = "System Administrator"
+                        };
+
+                        context.Admins.Add(admin);
+                        context.SaveChanges();
+
+                        Console.WriteLine("✅ Default Admin Created");
+                    }
+                    else
+                    {
+                        Console.WriteLine("ℹ️ Admin already exists");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("❌ Error while seeding admin: " + ex.Message);
+                }
+            }
 
             app.Run();
         }

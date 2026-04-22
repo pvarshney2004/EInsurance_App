@@ -449,6 +449,27 @@ namespace EInsurance_App.Controllers
             return RedirectToAction("Dashboard");
         }
 
+        [HttpPost]
+        public IActionResult RemoveAgent()
+        {
+            var auth = AuthorizeRole("Customer");
+            if (auth != null) return auth;
+
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            var customer = _context.Customers
+                .FirstOrDefault(x => x.Email == email);
+
+            if (customer == null)
+                return RedirectToAction("Login", "Account");
+
+            customer.AgentID = null;
+            _context.SaveChanges();
+
+            TempData["Success"] = "Agent removed successfully";
+
+            return RedirectToAction("SelectAgent");
+        }
         // uc-07 generating invoice
         public IActionResult GenerateInvoice(int paymentId)
         {

@@ -5,6 +5,7 @@
 
 @if (ViewBag.AssignedAgent != null)
 {
+    <!--  CURRENT AGENT -->
     <div class="card mb-4" style="border-left:4px solid #0284c7;max-width:520px;">
         <div class="card-body p-4">
             <div class="d-flex align-items-center gap-3 mb-3">
@@ -17,18 +18,72 @@
                     <small class="text-muted">@ViewBag.AssignedAgent.Email</small>
                 </div>
             </div>
-            <button class="btn btn-warning btn-sm" onclick="showChange()">
-                <i class="bi bi-arrow-repeat me-1"></i>Change Agent
-            </button>
+
+            <!-- Show change button ONLY if agents exist -->
+            @if (ViewBag.Agents != null && ViewBag.Agents.Count > 0)
+            {
+                <button class="btn btn-warning btn-sm" onclick="showChange()">
+                    <i class="bi bi-arrow-repeat me-1"></i>Change Agent
+                </button>
+                <form asp-action="RemoveAgent" method="post" style="display:inline;">
+                    <button class="btn btn-outline-danger btn-sm ms-2">
+                        <i class="bi bi-x-circle me-1"></i>Remove Agent
+                    </button>
+                </form>
+            }
         </div>
     </div>
 
-    <div id="changeForm" style="display:none;max-width:520px;">
-        <div class="card" style="border-radius:14px;border:none;box-shadow:0 4px 20px rgba(15,31,61,0.09);">
+    <!-- CHANGE AGENT FORM -->
+    @if (ViewBag.Agents != null && ViewBag.Agents.Count > 0)
+    {
+        <div id="changeForm" style="display:none;max-width:520px;">
+            <div class="card" style="border-radius:14px;border:none;box-shadow:0 4px 20px rgba(15,31,61,0.09);">
+                <div class="card-body p-4">
+                    <form method="post">
+                        <div class="mb-4">
+                            <label class="form-label">Select New Agent</label>
+                            <select name="agentId" class="form-select">
+                                @foreach (var a in ViewBag.Agents)
+                                {
+                                    <option value="@a.AgentID">@a.FullName (@a.Email)</option>
+                                }
+                            </select>
+                        </div>
+                        <button class="btn btn-danger">
+                            <i class="bi bi-check-circle me-1"></i>Update Agent
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- NO AGENTS AVAILABLE -->
+        <div class="alert alert-warning" style="max-width:520px;">
+            <i class="bi bi-exclamation-circle me-1"></i>
+            No agents available right now. Please contact admin.
+        </div>
+    }
+
+    <script>
+        function showChange() {
+            document.getElementById("changeForm").style.display = "block";
+        }
+    </script>
+}
+else
+{
+    <!-- NO AGENT ASSIGNED -->
+    @if (ViewBag.Agents != null && ViewBag.Agents.Count > 0)
+    {
+        <!-- ASSIGN AGENT -->
+        <div class="card" style="max-width:520px;border-radius:14px;border:none;box-shadow:0 4px 20px rgba(15,31,61,0.09);">
             <div class="card-body p-4">
                 <form method="post">
                     <div class="mb-4">
-                        <label class="form-label">Select New Agent</label>
+                        <label class="form-label">Select Agent</label>
                         <select name="agentId" class="form-select">
                             @foreach (var a in ViewBag.Agents)
                             {
@@ -36,15 +91,19 @@
                             }
                         </select>
                     </div>
-                    <button class="btn btn-danger"><i class="bi bi-check-circle me-1"></i>Update Agent</button>
+                    <button class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>Assign Agent
+                    </button>
                 </form>
             </div>
         </div>
-    </div>
-
-    <script>
-        function showChange() {
-            document.getElementById("changeForm").style.display = "block";
-        }
-    </script>
+    }
+    else
+    {
+        <!-- NO AGENTS IN SYSTEM -->
+        <div class="alert alert-info text-center" style="max-width:520px;">
+            <i class="bi bi-info-circle me-1"></i>
+            No agents are available at the moment.
+        </div>
+    }
 }
