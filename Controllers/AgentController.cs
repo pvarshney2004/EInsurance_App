@@ -92,6 +92,12 @@ namespace EInsurance_App.Controllers
             var scheme = _context.Schemes.Find(model.SchemeID);
             if (scheme == null) return NotFound();
 
+            if (!ModelState.IsValid)
+            {
+                ViewBag.SchemeName = scheme.SchemeName;
+                return View(model);
+            }
+
             decimal baseRate = 0.02m;     // 2% of coverage
             decimal ageFactor = 0.001m;   // risk increases with age
             decimal durationFactor = 0.005m;

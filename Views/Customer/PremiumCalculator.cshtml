@@ -16,17 +16,20 @@
 
             <div class="mb-3">
                 <label>Coverage Amount</label>
-                <input asp-for="CoverageAmount" class="form-control" placeholder="e.g. 500000" required />
+                <input asp-for="CoverageAmount" class="form-control" />
+                <span asp-validation-for="CoverageAmount" class="text-danger small"></span>
             </div>
 
             <div class="mb-3">
                 <label>Age</label>
-                <input asp-for="Age" class="form-control" placeholder="e.g. 30" required />
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger small"></span>
             </div>
 
             <div class="mb-4">
                 <label>Duration (Years)</label>
-                <input asp-for="Duration" class="form-control" placeholder="e.g. 10" required />
+                <input asp-for="Duration" class="form-control" />
+                <span asp-validation-for="Duration" class="text-danger small"></span>
             </div>
 
             <button type="submit" class="btn btn-primary w-100">
@@ -35,3 +38,7 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

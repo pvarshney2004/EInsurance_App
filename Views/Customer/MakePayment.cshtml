@@ -9,7 +9,6 @@
     <div class="card-body p-4">
         <form asp-action="MakePayment" method="post">
             <input type="hidden" asp-for="PolicyID" />
-            <div asp-validation-summary="All" class="text-danger small mb-3"></div>
             <div class="mb-4">
                 <label>Enter Amount</label>
                 <div class="input-group">

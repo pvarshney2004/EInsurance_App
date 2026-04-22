@@ -222,6 +222,47 @@ namespace EInsurance_App.Controllers
             return View(vm);
         }
 
+        // for normal payment without razorpay integration
+
+        //[HttpPost]
+        //public IActionResult MakePayment(MakePaymentVM model)
+        //{
+        //    var auth = AuthorizeRole("Customer");
+        //    if (auth != null) return auth;
+
+        //    if (!ModelState.IsValid)
+        //        return View(model);
+
+        //    var email = HttpContext.Session.GetString("UserEmail");
+
+        //    var customer = _context.Customers
+        //        .FirstOrDefault(x => x.Email == email);
+
+        //    if (customer == null)
+        //        return RedirectToAction("Login", "Account");
+
+        //    var policy = _context.Policies
+        //        .FirstOrDefault(p => p.PolicyID == model.PolicyID && p.CustomerID == customer.CustomerID);
+
+        //    if (policy == null)
+        //        return Unauthorized();
+
+        //    var payment = new Models.Payment
+        //    {
+        //        CustomerID = customer.CustomerID,
+        //        PolicyID = model.PolicyID,
+        //        Amount = model.Amount,
+        //        PaymentDate = DateTime.Now
+        //    };
+
+        //    _context.Payments.Add(payment);
+        //    _context.SaveChanges();
+
+        //    TempData["Success"] = "Payment successful";
+
+        //    return RedirectToAction("MyPolicies");
+        //}
+
         [HttpPost]
         public IActionResult MakePayment(MakePaymentVM model)
         {
@@ -240,25 +281,74 @@ namespace EInsurance_App.Controllers
                 return RedirectToAction("Login", "Account");
 
             var policy = _context.Policies
+                .Include(p => p.Payments)
                 .FirstOrDefault(p => p.PolicyID == model.PolicyID && p.CustomerID == customer.CustomerID);
 
             if (policy == null)
                 return Unauthorized();
 
-            var payment = new Models.Payment
+            var totalPaid = policy.Payments.Sum(p => p.Amount);
+            var remaining = policy.Premium - totalPaid;
+
+            if (model.Amount > remaining)
+            {
+                ModelState.AddModelError("Amount", $"Amount cannot exceed remaining premium (₹{remaining})");
+
+                ViewBag.PolicyID = policy.PolicyID;
+                ViewBag.Premium = policy.Premium;
+                ViewBag.Remaining = remaining;
+
+                return View(model);
+            }
+
+            var client = new Razorpay.Api.RazorpayClient(
+                _config["Razorpay:Key"],
+                _config["Razorpay:Secret"]
+            );
+
+            var options = new Dictionary<string, object>();
+            options.Add("amount", model.Amount * 100);
+            options.Add("currency", "INR");
+            options.Add("receipt", $"pol_{model.PolicyID}_{DateTime.Now.Ticks.ToString().Substring(10)}");
+
+            var order = client.Order.Create(options);
+
+            ViewBag.OrderId = order["id"].ToString();
+            ViewBag.Amount = model.Amount;
+            ViewBag.Key = _config["Razorpay:Key"];
+            ViewBag.PolicyID = model.PolicyID;
+
+            return View("PaymentGateway");
+        }
+
+        [HttpPost]
+        public IActionResult VerifyPayment([FromBody] dynamic data)
+        {
+            var paymentId = data.GetProperty("razorpay_payment_id").GetString();
+            int policyId = data.GetProperty("policyId").GetInt32();
+            decimal amount = data.GetProperty("amount").GetDecimal();
+
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            var customer = _context.Customers
+                .FirstOrDefault(x => x.Email == email);
+
+            if (customer == null)
+                return Json(new { success = false });
+
+            // SAVE ONLY AFTER SUCCESS
+            var payment = new Payment
             {
                 CustomerID = customer.CustomerID,
-                PolicyID = model.PolicyID,
-                Amount = model.Amount,
+                PolicyID = policyId,
+                Amount = amount,
                 PaymentDate = DateTime.Now
             };
 
             _context.Payments.Add(payment);
             _context.SaveChanges();
 
-            TempData["Success"] = "Payment successful";
-
-            return RedirectToAction("MyPolicies");
+            return Json(new { success = true });
         }
 
         // uc-05

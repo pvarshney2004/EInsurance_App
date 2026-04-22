@@ -1,0 +1,45 @@
+﻿<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    var options = {
+    "key": "@ViewBag.Key",
+    "amount": "@(ViewBag.Amount * 100)",
+    "currency": "INR",
+    "name": "EInsurance",
+    "description": "Policy Payment",
+    "order_id": "@ViewBag.OrderId",
+
+    "handler": function (response) {
+
+    fetch('/Customer/VerifyPayment', {
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+    razorpay_payment_id: response.razorpay_payment_id,
+    policyId: @ViewBag.PolicyID,
+    amount: @ViewBag.Amount
+    })
+    })
+    .then(res => res.json())
+    .then(data => {
+    if (data.success) {
+    window.location.href = "/Customer/MyPolicies";
+    } else {
+    alert("Payment verification failed");
+    }
+    });
+    },
+
+    "theme": {
+    "color": "#3399cc"
+    }
+    };
+
+    var rzp = new Razorpay(options);
+
+    window.onload = function () {
+    rzp.open();
+    };
+</script>
